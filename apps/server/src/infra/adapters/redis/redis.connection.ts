@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { HttpStatusCode, Injectable, ServerError } from '@lidcode/framework'
 import IORedis from 'ioredis'
 
@@ -5,6 +6,9 @@ import IORedis from 'ioredis'
 export class RedisClientAdapter {
   private readonly client = new IORedis({
     maxRetriesPerRequest: null,
+    host: env.REDIS_HOST,
+    port: env.REDIS_PORT,
+    password: env.REDIS_PASSWORD,
   })
 
   async set(key: string, value: string): Promise<boolean> {
