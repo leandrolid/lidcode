@@ -1,6 +1,6 @@
 import { env } from '@/env'
 import type { ICounterService } from '@domain/services/counter.service'
-import type { IHashService } from '@domain/services/hash.service'
+import type { IShortCodeService } from '@domain/services/short-code.service'
 import type { IUrlRepository } from '@infra/repositories/url/url.repository'
 import { Inject, Injectable } from '@lidcode/framework'
 
@@ -11,8 +11,8 @@ type Input = {
 @Injectable()
 export class CreateShortenUrlUsecase {
   constructor(
-    @Inject('IHashService')
-    private readonly hashService: IHashService,
+    @Inject('IShortCodeService')
+    private readonly shortCodeService: IShortCodeService,
     @Inject('ICounterService')
     private readonly counterService: ICounterService,
     @Inject('IUrlRepository')
@@ -21,7 +21,7 @@ export class CreateShortenUrlUsecase {
 
   async execute(input: Input): Promise<{ shortUrl: string }> {
     const id = await this.counterService.getCountFor('url_counter')
-    const shortCode = this.hashService.createHashFromId(id)
+    const shortCode = this.shortCodeService.createFromId(id)
     await this.urlRepository.create({
       id,
       originalUrl: input.originalUrl,

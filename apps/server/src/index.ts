@@ -1,10 +1,12 @@
 import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shorten-url.usecase'
+import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-url.usecase'
 import { env } from '@/env'
 import { CreateShortenUrlController } from '@infra/controllers/urls/create-shorten-url/create-shorten-url.controller'
+import { RedirectToUrlController } from '@infra/controllers/urls/redirect-to-url/redirect-to-url.controller'
 import { HttpErrorHandler } from '@infra/middlewares/error.handler'
 import { UrlRepository } from '@infra/repositories/url/url.repository.imp'
 import { CounterService } from '@infra/services/counter.service'
-import { HashService } from '@infra/services/hash.service'
+import { ShortCodeService } from '@infra/services/short-code.service'
 import { createServer } from '@lidcode/framework'
 
 async function main() {
@@ -16,8 +18,14 @@ async function main() {
       files: 100,
     },
     cors: ['*'],
-    providers: [HashService, CounterService, UrlRepository, CreateShortenUrlUsecase],
-    controllers: [CreateShortenUrlController],
+    providers: [
+      ShortCodeService,
+      CounterService,
+      UrlRepository,
+      CreateShortenUrlUsecase,
+      RedirectToUrlUsecase,
+    ],
+    controllers: [CreateShortenUrlController, RedirectToUrlController],
     errorHandler: new HttpErrorHandler(),
   })
   await app.start(env.PORT)
