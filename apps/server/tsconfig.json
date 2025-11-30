@@ -1,0 +1,26 @@
+{
+  "extends": "@lidcode/tsconfig/base.json",
+  "include": [
+    "src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@infra/*": [
+        "src/infra/*"
+      ],
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@domain/*": [
+        "src/domain/*"
+      ],
+      "@/*": [
+        "src/*"
+      ]
+    }
+  }
+}
