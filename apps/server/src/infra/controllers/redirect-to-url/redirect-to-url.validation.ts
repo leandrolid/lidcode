@@ -3,7 +3,7 @@ import z from 'zod'
 
 export class RedirectToUrlValidation implements IValidation {
   params = z.object({
-    shortCode: z.string().min(3).max(10),
+    code: z.string().min(3).max(10),
   })
 }
 

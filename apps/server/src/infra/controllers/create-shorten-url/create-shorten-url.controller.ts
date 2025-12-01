@@ -2,10 +2,10 @@ import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shor
 import {
   CreateShortenUrlResponseValidation,
   CreateShortenUrlValidation,
-} from '@infra/controllers/urls/create-shorten-url/create-shorten-url.validation'
+} from '@infra/controllers/create-shorten-url/create-shorten-url.validation'
 import { Body, Controller, Docs, Post, Validate, type InferBody } from '@leandrolid/framework'
 
-@Controller('v1/urls')
+@Controller('urls')
 @Docs({
   tags: ['Shorten URLs'],
   title: 'Create Shorten URL',

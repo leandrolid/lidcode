@@ -2,7 +2,7 @@ import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-ur
 import {
   RedirectToUrlResponseValidation,
   RedirectToUrlValidation,
-} from '@infra/controllers/urls/redirect-to-url/redirect-to-url.validation'
+} from '@infra/controllers/redirect-to-url/redirect-to-url.validation'
 import {
   Controller,
   Docs,
@@ -14,7 +14,7 @@ import {
   type IResponse,
 } from '@leandrolid/framework'
 
-@Controller(':shortCode')
+@Controller(':code')
 @Docs({
   tags: ['Shorten URLs'],
   title: 'Redirect to Original URL',
