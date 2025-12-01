@@ -11,13 +11,9 @@ import { ShortCodeService } from '@infra/services/short-code.service'
 import { createServer } from '@leandrolid/framework'
 
 async function main() {
-  const app = await createServer({
-    docs: true,
+  const app = createServer({
+    docs: env.NODE_ENV !== 'production',
     zodValidation: true,
-    multipartForm: {
-      fileSize: 100 * 1024 * 1024,
-      files: 100,
-    },
     cors: ['*'],
     providers: [
       RedisClientAdapter,
