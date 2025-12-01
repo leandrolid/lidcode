@@ -1,6 +1,7 @@
 import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shorten-url.usecase'
 import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-url.usecase'
 import { env } from '@/env'
+import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
 import { CreateShortenUrlController } from '@infra/controllers/urls/create-shorten-url/create-shorten-url.controller'
 import { RedirectToUrlController } from '@infra/controllers/urls/redirect-to-url/redirect-to-url.controller'
 import { HttpErrorHandler } from '@infra/middlewares/error.handler'
@@ -19,6 +20,7 @@ async function main() {
     },
     cors: ['*'],
     providers: [
+      RedisClientAdapter,
       ShortCodeService,
       CounterService,
       UrlRepository,
