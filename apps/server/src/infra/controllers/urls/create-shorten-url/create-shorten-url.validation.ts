@@ -1,4 +1,4 @@
-import { IValidation, IResponseValidation } from '@lidcode/framework'
+import { IValidation, IResponseValidation } from '@leandrolid/framework'
 import z from 'zod'
 
 export class CreateShortenUrlValidation implements IValidation {

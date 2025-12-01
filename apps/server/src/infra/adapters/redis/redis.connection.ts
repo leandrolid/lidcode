@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { HttpStatusCode, Injectable, ServerError } from '@lidcode/framework'
+import { HttpStatusCode, Injectable, ServerError } from '@leandrolid/framework'
 import IORedis from 'ioredis'
 
 @Injectable()

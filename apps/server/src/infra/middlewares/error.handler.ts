@@ -1,10 +1,10 @@
 import {
-    HttpStatusCode,
-    IErrorHandler,
-    Logger,
-    ServerError,
-    type IResponse,
-} from '@lidcode/framework'
+  HttpStatusCode,
+  IErrorHandler,
+  Logger,
+  ServerError,
+  type IResponse,
+} from '@leandrolid/framework'
 
 export class HttpErrorHandler implements IErrorHandler {
   private readonly logger: Logger = new Logger('HttpErrorHandler')

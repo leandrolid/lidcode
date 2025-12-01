@@ -1,7 +1,7 @@
 import type { IRepository } from '@domain/persistence/repository'
 import { InjectRepository } from '@infra/decorators/inject-repository.decorator'
 import type { CreateUrlInput, IUrlRepository } from '@infra/repositories/url/url.repository'
-import { Injectable } from '@lidcode/framework'
+import { Injectable } from '@leandrolid/framework'
 import type { ShortenedUrl } from '@prisma/client'
 
 @Injectable({

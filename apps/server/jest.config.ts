@@ -14,7 +14,7 @@ const config: Config = {
     ],
     '^.+\\.js$': 'babel-jest',
   },
-  transformIgnorePatterns: ['node_modules/(?!(chalk|@t3-oss|@lidcode)/)'],
+  transformIgnorePatterns: ['node_modules/(?!(chalk|@t3-oss|@leandrolid)/)'],
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts', '!src/**/__tests__/**'],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],

@@ -1,6 +1,6 @@
 import type { ICounterService } from '@domain/services/counter.service'
 import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
-import { Injectable } from '@lidcode/framework'
+import { Injectable } from '@leandrolid/framework'
 
 @Injectable({
   token: 'ICounterService',

@@ -8,7 +8,7 @@ import { HttpErrorHandler } from '@infra/middlewares/error.handler'
 import { UrlRepository } from '@infra/repositories/url/url.repository.imp'
 import { CounterService } from '@infra/services/counter.service'
 import { ShortCodeService } from '@infra/services/short-code.service'
-import { createServer } from '@lidcode/framework'
+import { createServer } from '@leandrolid/framework'
 
 async function main() {
   const app = await createServer({

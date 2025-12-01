@@ -12,7 +12,7 @@ import {
   Validate,
   type InferParams,
   type IResponse,
-} from '@lidcode/framework'
+} from '@leandrolid/framework'
 
 @Controller(':shortCode')
 @Docs({

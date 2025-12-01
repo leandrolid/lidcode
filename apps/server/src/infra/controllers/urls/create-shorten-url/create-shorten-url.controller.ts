@@ -3,7 +3,7 @@ import {
   CreateShortenUrlResponseValidation,
   CreateShortenUrlValidation,
 } from '@infra/controllers/urls/create-shorten-url/create-shorten-url.validation'
-import { Body, Controller, Docs, Post, Validate, type InferBody } from '@lidcode/framework'
+import { Body, Controller, Docs, Post, Validate, type InferBody } from '@leandrolid/framework'
 
 @Controller('v1/urls')
 @Docs({
