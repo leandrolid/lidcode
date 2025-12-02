@@ -1,4 +1,4 @@
-import { createDecorator, Scope } from '@leandrolid/framework'
+import { createDecorator, Scope } from '@lidcode/framework'
 import { PrismaDatabaseConnection } from '@infra/adapters/prisma/connection.imp'
 import { PrismaRepository } from '@infra/adapters/prisma/repository.imp'
 import type { Prisma } from '@prisma/client'

@@ -1,2 +1,2 @@
-import config from '@leandrolid/eslint/base'
+import config from '@lidcode/eslint/base'
 export default config

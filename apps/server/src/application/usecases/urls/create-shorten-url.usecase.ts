@@ -2,7 +2,7 @@ import { env } from '@/env'
 import type { ICounterService } from '@domain/services/counter.service'
 import type { IShortCodeService } from '@domain/services/short-code.service'
 import type { IUrlRepository } from '@infra/repositories/url/url.repository'
-import { Inject, Injectable } from '@leandrolid/framework'
+import { Inject, Injectable } from '@lidcode/framework'
 
 type Input = {
   originalUrl: string

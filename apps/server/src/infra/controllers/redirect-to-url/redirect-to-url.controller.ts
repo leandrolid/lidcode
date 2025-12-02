@@ -1,18 +1,18 @@
 import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-url.usecase'
 import {
-  RedirectToUrlResponseValidation,
-  RedirectToUrlValidation,
+    RedirectToUrlResponseValidation,
+    RedirectToUrlValidation,
 } from '@infra/controllers/redirect-to-url/redirect-to-url.validation'
 import {
-  Controller,
-  Docs,
-  Get,
-  Params,
-  Response,
-  Validate,
-  type InferParams,
-  type IResponse,
-} from '@leandrolid/framework'
+    Controller,
+    Docs,
+    Get,
+    Params,
+    Response,
+    Validate,
+    type InferParams,
+    type IResponse,
+} from '@lidcode/framework'
 
 @Controller(':code')
 @Docs({

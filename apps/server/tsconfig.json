@@ -1,5 +1,5 @@
 {
-  "extends": "@leandrolid/tsconfig/base.json",
+  "extends": "@lidcode/tsconfig/base.json",
   "include": [
     "src/**/*.ts"
   ],

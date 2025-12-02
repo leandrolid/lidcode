@@ -1,4 +1,4 @@
-import { IResponseValidation, IValidation } from '@leandrolid/framework'
+import { IResponseValidation, IValidation } from '@lidcode/framework'
 import z from 'zod'
 
 export class RedirectToUrlValidation implements IValidation {

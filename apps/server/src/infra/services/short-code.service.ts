@@ -1,5 +1,5 @@
 import type { IShortCodeService } from '@domain/services/short-code.service'
-import { BadRequestError, Injectable } from '@leandrolid/framework'
+import { BadRequestError, Injectable } from '@lidcode/framework'
 import Hashids from 'hashids'
 
 @Injectable({

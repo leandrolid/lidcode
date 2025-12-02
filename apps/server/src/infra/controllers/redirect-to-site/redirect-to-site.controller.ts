@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { Controller, Docs, Get, Response, type IResponse } from '@leandrolid/framework'
+import { Controller, Docs, Get, Response, type IResponse } from '@lidcode/framework'
 
 @Controller('')
 @Docs({

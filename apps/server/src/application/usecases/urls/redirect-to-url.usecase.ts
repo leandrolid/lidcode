@@ -1,5 +1,5 @@
 import type { IUrlRepository } from '@infra/repositories/url/url.repository'
-import { Inject, Injectable, NotFoundError } from '@leandrolid/framework'
+import { Inject, Injectable, NotFoundError } from '@lidcode/framework'
 
 type Input = {
   code: string
