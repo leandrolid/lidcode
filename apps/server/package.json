@@ -14,6 +14,7 @@
     "test:watch": "jest --watch",
     "seed:dev": "prisma db seed",
     "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
     "generate:dev": "prisma generate"
   },
   "dependencies": {

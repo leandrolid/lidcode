@@ -6,6 +6,7 @@
     "dev": "dotenv -e .env -- turbo run dev --log-prefix=none --log-order=stream",
     "start:dev": "dotenv -e .env -- turbo run start:dev --log-prefix=none --log-order=stream",
     "migrate:dev": "dotenv -e .env -- turbo run migrate:dev",
+    "migrate:deploy": "dotenv -e .env -- turbo run migrate:deploy",
     "seed:dev": "dotenv -e .env -- turbo run seed:dev",
     "generate:dev": "dotenv -e .env -- turbo run generate:dev",
     "lint": "turbo run lint",

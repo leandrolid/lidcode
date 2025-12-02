@@ -24,6 +24,9 @@
     "migrate:dev": {
       "cache": false
     },
+    "migrate:deploy": {
+      "cache": false
+    },
     "seed:dev": {
       "cache": false
     },
