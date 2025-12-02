@@ -4,10 +4,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   BASE_URL: z.url().transform((url) => url.replace(/\/$/, '')),
-  DATABASE_URL: z.string(),
-  REDIS_HOST: z.string().default('localhost'),
-  REDIS_PORT: z.coerce.number().default(6379),
-  REDIS_PASSWORD: z.string().optional(),
+  DATABASE_URL: z.string().optional().default('postgresql://localhost:5432/shortlid'),
+  REDIS_URL: z.string().optional().default('redis://localhost:6379'),
   SITE_URL: z.url(),
 })
 
