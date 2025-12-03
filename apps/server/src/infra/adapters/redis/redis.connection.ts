@@ -5,8 +5,7 @@ import IORedis from 'ioredis'
 @Injectable()
 export class RedisClientAdapter {
   private readonly client = new IORedis(env.REDIS_URL, {
-    maxRetriesPerRequest: null,
-    tls: { rejectUnauthorized: false },
+    tls: /resiss?:\/\/(.*?):(.*?)/.test(env.REDIS_URL) ? { rejectUnauthorized: false } : undefined,
   })
 
   async set(key: string, value: string): Promise<boolean> {
