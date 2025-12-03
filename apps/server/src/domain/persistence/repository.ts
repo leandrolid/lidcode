@@ -4,7 +4,7 @@ import type { Select } from '@domain/persistence/select'
 
 export interface IRepository<Entity> {
   createOne(data: Partial<Entity>): Promise<Entity>
-  findById(id: string): Promise<Entity | null>
+  findById<T>(id: T): Promise<Entity | null>
   findOne(filters: FindOneOptions<Entity>): Promise<Entity | null>
   findUnique(filters: FindOneOptions<Entity>): Promise<Entity | null>
   findMany(filters: FindManyOptions<Entity>): Promise<Entity[]>

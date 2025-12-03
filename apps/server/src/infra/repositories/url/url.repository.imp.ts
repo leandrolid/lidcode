@@ -18,7 +18,7 @@ export class UrlRepository implements IUrlRepository {
   }
 
   async findById(id: number): Promise<ShortenedUrl | null> {
-    return this.repository.findById(id.toString())
+    return this.repository.findById(id)
   }
 
   async findByShortCode(shortCode: string): Promise<ShortenedUrl | null> {
