@@ -24,7 +24,7 @@ export class PrismaRepository<T> implements IRepository<T> {
     return result as T
   }
 
-  async findById(id: string): Promise<T | null> {
+  async findById<I>(id: I): Promise<T | null> {
     const result = await this.connection.query(this.modelName, 'findUnique', {
       // @ts-expect-error - Prisma expects the correct type for id, but we only have string here
       where: { id },
