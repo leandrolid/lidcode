@@ -1,3 +1,4 @@
+import type { IShortCodeService } from '@domain/services/short-code.service'
 import type { IUrlRepository } from '@infra/repositories/url/url.repository'
 import { Inject, Injectable, NotFoundError } from '@lidcode/framework'
 
@@ -10,10 +11,13 @@ export class RedirectToUrlUsecase {
   constructor(
     @Inject('IUrlRepository')
     private readonly urlRepository: IUrlRepository,
+    @Inject('IShortCodeService')
+    private readonly shortCodeService: IShortCodeService,
   ) {}
 
   async execute(input: Input) {
-    const urlData = await this.urlRepository.findByShortCode(input.code)
+    const id = this.shortCodeService.getIdFromCode(input.code)
+    const urlData = await this.urlRepository.findById(id as number)
     if (!urlData) {
       throw new NotFoundError('URL not found')
     }
