@@ -10,5 +10,6 @@ export class CreateShortenUrlValidation implements IValidation {
 export class CreateShortenUrlResponseValidation implements IResponseValidation {
   201 = z.object({
     shortUrl: z.string(),
+    originalUrl: z.string(),
   })
 }

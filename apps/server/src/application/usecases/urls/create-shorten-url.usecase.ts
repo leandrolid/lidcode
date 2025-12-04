@@ -19,7 +19,7 @@ export class CreateShortenUrlUsecase {
     private readonly urlRepository: IUrlRepository,
   ) {}
 
-  async execute(input: Input): Promise<{ shortUrl: string }> {
+  async execute(input: Input) {
     const id = await this.counterService.getCountFor('url_counter')
     const shortCode = this.shortCodeService.createFromId(id)
     await this.urlRepository.create({
@@ -29,6 +29,7 @@ export class CreateShortenUrlUsecase {
     })
     return {
       shortUrl: `${env.BASE_URL}/${shortCode}`,
+      originalUrl: input.originalUrl,
     }
   }
 }
