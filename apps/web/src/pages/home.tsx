@@ -26,6 +26,7 @@ export function Home() {
     "urls",
     []
   );
+  const [newlyAddedIndex, setNewlyAddedIndex] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,10 +41,15 @@ export function Home() {
 
     try {
       const response = await createShortUrl(url);
-      setShortenedUrls((prev) => [
-        ...prev,
-        { originalUrl: url, shortUrl: response.shortUrl },
-      ]);
+      setShortenedUrls((prev) => {
+        const newList = [
+          { originalUrl: url, shortUrl: response.shortUrl },
+          ...prev,
+        ];
+        setNewlyAddedIndex(0);
+        setTimeout(() => setNewlyAddedIndex(null), 2000);
+        return newList;
+      });
       setUrl("");
 
       // Success animation
@@ -116,53 +122,73 @@ export function Home() {
             </p>
           ) : (
             <div className="space-y-4">
-              {shortenedUrls.map((item, index) => (
-                <Fragment key={index}>
-                  <div
-                    key={index}
-                    className="flex flex-col md:grid md:grid-cols-[1fr_15rem_6.75rem] items-center gap-2"
-                  >
-                    <p className="truncate text-base text-center w-full">
-                      {item.originalUrl}
-                    </p>
-                    <Button
-                      variant="link"
-                      asChild
-                      className="text-blue-400 cursor-pointer text-base w-fit text-center mx-auto"
+              {shortenedUrls.map((item, index) => {
+                const isNewlyAdded = newlyAddedIndex === index;
+                return (
+                  <Fragment key={index}>
+                    <motion.div
+                      key={`${item.shortUrl}-${index}`}
+                      initial={
+                        isNewlyAdded
+                          ? { opacity: 0, y: -20, scale: 0.95 }
+                          : false
+                      }
+                      animate={
+                        isNewlyAdded ? { opacity: 1, y: 0, scale: 1 } : {}
+                      }
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className={cn({
+                        "ring-green-500 ring-opacity-50 rounded-lg p-2 bg-green-50 dark:bg-green-900/20":
+                          isNewlyAdded,
+                      })}
                     >
-                      <a
-                        href={item.shortUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <div
+                        key={index}
+                        className="flex flex-col md:grid md:grid-cols-[1fr_15rem_6.75rem] items-center gap-2"
                       >
-                        {item.shortUrl}
-                      </a>
-                    </Button>
-                    <div className="flex gap-2 justify-between">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(item.shortUrl)}
-                      >
-                        Copy
-                      </Button>
-                      <ConfirmDeleteDialog
-                        description="This action cannot be undone. This will permanently delete the short link from our servers."
-                        onConfirm={() => {
-                          setShortenedUrls((prev) =>
-                            prev.filter((_, i) => i !== index)
-                          );
-                        }}
-                      >
-                        <Button variant="ghost" size="sm">
-                          <Trash />
+                        <p className="truncate text-base text-center w-full">
+                          {item.originalUrl}
+                        </p>
+                        <Button
+                          variant="link"
+                          asChild
+                          className="text-blue-400 cursor-pointer text-base w-fit text-center mx-auto"
+                        >
+                          <a
+                            href={item.shortUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {item.shortUrl}
+                          </a>
                         </Button>
-                      </ConfirmDeleteDialog>
-                    </div>
-                  </div>
-                  <Separator className="my-2" orientation="horizontal" />
-                </Fragment>
-              ))}
+                        <div className="flex gap-2 justify-between">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyToClipboard(item.shortUrl)}
+                          >
+                            Copy
+                          </Button>
+                          <ConfirmDeleteDialog
+                            description="This action cannot be undone. This will permanently delete the short link from our servers."
+                            onConfirm={() => {
+                              setShortenedUrls((prev) =>
+                                prev.filter((_, i) => i !== index)
+                              );
+                            }}
+                          >
+                            <Button variant="ghost" size="sm">
+                              <Trash />
+                            </Button>
+                          </ConfirmDeleteDialog>
+                        </div>
+                      </div>
+                    </motion.div>
+                    <Separator className="my-2" orientation="horizontal" />
+                  </Fragment>
+                );
+              })}
             </div>
           )}
         </Card>
