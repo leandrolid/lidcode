@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useStorage } from "@/hooks/use-storage";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import map from "/map.svg";
+import { Trash } from "lucide-react";
 
 interface ShortenedUrl {
   originalUrl: string;
@@ -67,7 +69,12 @@ export function App() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center px-4">
+    <div
+      className="w-full min-h-screen flex flex-col items-center justify-center px-4 bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url('${map}')`,
+      }}
+    >
       <div className="space-y-6 w-full max-w-3xl p-6">
         <h2 className="text-2xl font-bold text-center">Shorten Your URL</h2>
         <h3 className="text-center text-gray-400">
@@ -107,7 +114,7 @@ export function App() {
                 <Fragment key={index}>
                   <div
                     key={index}
-                    className="flex flex-col md:grid md:grid-cols-[1fr_15rem_4rem] items-center gap-2"
+                    className="flex flex-col md:grid md:grid-cols-[1fr_15rem_6.75rem] items-center gap-2"
                   >
                     <p className="truncate text-base text-center w-full">
                       {item.originalUrl}
@@ -115,7 +122,7 @@ export function App() {
                     <Button
                       variant="link"
                       asChild
-                      className="text-blue-400 cursor-pointer text-base"
+                      className="text-blue-400 cursor-pointer text-base w-fit text-center mx-auto"
                     >
                       <a
                         href={item.shortUrl}
@@ -125,13 +132,24 @@ export function App() {
                         {item.shortUrl}
                       </a>
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(item.shortUrl)}
-                    >
-                      Copy
-                    </Button>
+                    <div className="flex gap-2 justify-between">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(item.shortUrl)}
+                      >
+                        Copy
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          alert("Delete feature coming soon!");
+                        }}
+                      >
+                        <Trash />
+                      </Button>
+                    </div>
                   </div>
                   <Separator className="my-2" orientation="horizontal" />
                 </Fragment>
