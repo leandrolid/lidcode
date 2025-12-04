@@ -1,12 +1,19 @@
 import { env } from '@/env'
-import { HttpStatusCode, Injectable, ServerError } from '@lidcode/framework'
+import { HttpStatusCode, Injectable, Logger, ServerError } from '@lidcode/framework'
 import IORedis from 'ioredis'
 
 @Injectable()
 export class RedisClientAdapter {
+  private readonly logger = new Logger('Redis')
   private readonly client = new IORedis(env.REDIS_URL, {
     tls: /rediss?:\/\/(.*?):(.*?)/.test(env.REDIS_URL) ? { rejectUnauthorized: false } : undefined,
   })
+
+  constructor() {
+    this.client.on('error', (error) => {
+      this.logger.error(error)
+    })
+  }
 
   async set(key: string, value: string): Promise<boolean> {
     try {
