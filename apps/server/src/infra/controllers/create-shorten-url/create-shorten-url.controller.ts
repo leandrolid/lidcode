@@ -5,7 +5,7 @@ import {
 } from '@infra/controllers/create-shorten-url/create-shorten-url.validation'
 import { Body, Controller, Docs, Post, Validate, type InferBody } from '@lidcode/framework'
 
-@Controller('urls')
+@Controller('v1/urls')
 @Docs({
   tags: ['Shorten URLs'],
   title: 'Create Shorten URL',
