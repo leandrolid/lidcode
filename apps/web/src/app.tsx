@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import map from "/map.svg";
 import { Trash } from "lucide-react";
+import { createShortUrl } from "@/services/urls/create-short-url";
+import { ConfirmDeleteDialog } from "@/components/dialogs/confirm-delete";
 
 interface ShortenedUrl {
   originalUrl: string;
@@ -28,28 +30,11 @@ export function App() {
         toast.error("Please enter a valid URL");
         return;
       }
-
       try {
-        // Replace with your actual API endpoint
-        const response = await fetch("https://lidco.de/v1/urls", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ originalUrl: url }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to shorten URL");
-        }
-
-        const data = await response.json();
+        const response = await createShortUrl(url);
         setShortenedUrls((prev) => [
           ...prev,
-          {
-            originalUrl: url,
-            shortUrl: data.shortUrl,
-          },
+          { originalUrl: url, shortUrl: response.shortUrl },
         ]);
         setUrl("");
       } catch (error) {
@@ -140,15 +125,18 @@ export function App() {
                       >
                         Copy
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          alert("Delete feature coming soon!");
+                      <ConfirmDeleteDialog
+                        description="This action cannot be undone. This will permanently delete the short link from our servers."
+                        onConfirm={() => {
+                          setShortenedUrls((prev) =>
+                            prev.filter((_, i) => i !== index)
+                          );
                         }}
                       >
-                        <Trash />
-                      </Button>
+                        <Button variant="ghost" size="sm">
+                          <Trash />
+                        </Button>
+                      </ConfirmDeleteDialog>
                     </div>
                   </div>
                   <Separator className="my-2" orientation="horizontal" />
