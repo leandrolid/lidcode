@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useStorage } from "@/hooks/use-storage";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
 
 interface ShortenedUrl {
   originalUrl: string;
@@ -106,9 +107,9 @@ export function App() {
                 <Fragment key={index}>
                   <div
                     key={index}
-                    className="flex flex-col md:grid md:grid-cols-[1fr_15rem_4rem] md:justify-between gap-2"
+                    className="flex flex-col md:grid md:grid-cols-[1fr_15rem_4rem] items-center gap-2"
                   >
-                    <p className="truncate text-base text-center">
+                    <p className="truncate text-base text-center w-full">
                       {item.originalUrl}
                     </p>
                     <Button
@@ -132,6 +133,7 @@ export function App() {
                       Copy
                     </Button>
                   </div>
+                  <Separator className="my-2" orientation="horizontal" />
                 </Fragment>
               ))}
             </div>
