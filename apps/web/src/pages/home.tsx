@@ -1,4 +1,4 @@
-import { Fragment, useState, useTransition } from "react";
+import { Fragment, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,42 +6,57 @@ import { useStorage } from "@/hooks/use-storage";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import map from "/map.svg";
-import { Trash } from "lucide-react";
+import { LoaderCircleIcon, SendIcon, Trash, Check, X } from "lucide-react";
 import { createShortUrl } from "@/services/urls/create-short-url";
 import { ConfirmDeleteDialog } from "@/components/dialogs/confirm-delete";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface ShortenedUrl {
   originalUrl: string;
   shortUrl: string;
 }
 
-export function App() {
+type ButtonState = "idle" | "loading" | "success" | "error";
+
+export function Home() {
   const [url, setUrl] = useState("");
+  const [buttonState, setButtonState] = useState<ButtonState>("idle");
   const [shortenedUrls, setShortenedUrls] = useStorage<ShortenedUrl[]>(
     "urls",
     []
   );
-  const [isLoading, setLoadingTransition] = useTransition();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoadingTransition(async () => {
-      if (!url) {
-        toast.error("Please enter a valid URL");
-        return;
-      }
-      try {
-        const response = await createShortUrl(url);
-        setShortenedUrls((prev) => [
-          ...prev,
-          { originalUrl: url, shortUrl: response.shortUrl },
-        ]);
-        setUrl("");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to shorten URL. Please try again.");
-      }
-    });
+    if (buttonState === "loading") return;
+
+    if (!url) {
+      toast.error("Please enter a valid URL");
+      return;
+    }
+
+    setButtonState("loading");
+
+    try {
+      const response = await createShortUrl(url);
+      setShortenedUrls((prev) => [
+        ...prev,
+        { originalUrl: url, shortUrl: response.shortUrl },
+      ]);
+      setUrl("");
+
+      // Success animation
+      setButtonState("success");
+      setTimeout(() => setButtonState("idle"), 2000);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to shorten URL. Please try again.");
+
+      // Error animation
+      setButtonState("error");
+      setTimeout(() => setButtonState("idle"), 2000);
+    }
   };
 
   const copyToClipboard = async (text: string) => {
@@ -79,10 +94,16 @@ export function App() {
               />
               <Button
                 type="submit"
-                disabled={isLoading}
-                className="px-4 py-2 shrink-0"
+                disabled={buttonState === "loading"}
+                className={cn({
+                  "px-4 py-2 shrink-0": true,
+                  "bg-green-600 hover:bg-green-700 text-white":
+                    buttonState === "success",
+                  "bg-red-600 hover:bg-red-700 text-white":
+                    buttonState === "error",
+                })}
               >
-                {isLoading ? "Shortening..." : "Shorten"}
+                <AnimatedIcon buttonState={buttonState} />
               </Button>
             </div>
           </form>
@@ -149,3 +170,24 @@ export function App() {
     </div>
   );
 }
+
+const AnimatedIcon = ({ buttonState }: { buttonState: ButtonState }) => {
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={buttonState}
+        initial={{ opacity: 0, scale: 0.8, rotate: -180 }}
+        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+        exit={{ opacity: 0, scale: 0.8, rotate: 180 }}
+        transition={{ duration: 0.3 }}
+      >
+        {buttonState === "idle" && <SendIcon className="h-4 w-4" />}
+        {buttonState === "loading" && (
+          <LoaderCircleIcon className="h-4 w-4 animate-spin text-gray-100" />
+        )}
+        {buttonState === "success" && <Check className="h-4 w-4 text-white" />}
+        {buttonState === "error" && <X className="h-4 w-4 text-white" />}
+      </motion.div>
+    </AnimatePresence>
+  );
+};

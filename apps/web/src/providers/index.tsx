@@ -1,4 +1,4 @@
-import { App } from "@/app";
+import { Home } from "@/pages/home";
 import { ThemeProvider } from "@/providers/theme";
 import { ToastProvider } from "@/providers/toast";
 
@@ -6,7 +6,7 @@ export function Providers() {
   return (
     <>
       <ThemeProvider>
-        <App />
+        <Home />
         <ToastProvider />
       </ThemeProvider>
     </>
