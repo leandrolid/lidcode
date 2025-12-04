@@ -131,9 +131,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-a {
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer !important;
-}
