@@ -12,4 +12,5 @@ export async function createShortUrl(originalUrl: string) {
 
 export type CreateShortUrlResponse = {
   shortUrl: string;
+  originalUrl: string;
 };

@@ -7,62 +7,49 @@ import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import map from "/map.svg";
 import { LoaderCircleIcon, SendIcon, Trash, Check, X } from "lucide-react";
-import { createShortUrl } from "@/services/urls/create-short-url";
+import {
+  createShortUrl,
+  type CreateShortUrlResponse,
+} from "@/services/urls/create-short-url";
 import { ConfirmDeleteDialog } from "@/components/dialogs/confirm-delete";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-
-interface ShortenedUrl {
-  originalUrl: string;
-  shortUrl: string;
-}
 
 type ButtonState = "idle" | "loading" | "success" | "error";
 
 export function Home() {
   const [url, setUrl] = useState("");
   const [buttonState, setButtonState] = useState<ButtonState>("idle");
-  const [shortenedUrls, setShortenedUrls] = useStorage<ShortenedUrl[]>(
-    "urls",
-    []
-  );
+  const [shortenedUrls, setShortenedUrls] = useStorage<
+    CreateShortUrlResponse[]
+  >("urls", []);
   const [newlyAddedIndex, setNewlyAddedIndex] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (buttonState === "loading") return;
-
     if (!url) {
       toast.error("Please enter a valid URL");
       return;
     }
-
     setButtonState("loading");
-
-    try {
-      const response = await createShortUrl(url);
-      setShortenedUrls((prev) => {
-        const newList = [
-          { originalUrl: url, shortUrl: response.shortUrl },
-          ...prev,
-        ];
-        setNewlyAddedIndex(0);
-        setTimeout(() => setNewlyAddedIndex(null), 2000);
-        return newList;
-      });
-      setUrl("");
-
-      // Success animation
-      setButtonState("success");
-      setTimeout(() => setButtonState("idle"), 2000);
-    } catch (error) {
+    const [response, error] = await createShortUrl(url);
+    if (error) {
       console.error(error);
       toast.error("Failed to shorten URL. Please try again.");
-
-      // Error animation
       setButtonState("error");
       setTimeout(() => setButtonState("idle"), 2000);
+      return;
     }
+    setShortenedUrls((prev) => {
+      const newList = [response, ...prev];
+      setNewlyAddedIndex(0);
+      setTimeout(() => setNewlyAddedIndex(null), 2000);
+      return newList;
+    });
+    setUrl("");
+    setButtonState("success");
+    setTimeout(() => setButtonState("idle"), 2000);
   };
 
   const copyToClipboard = async (text: string) => {

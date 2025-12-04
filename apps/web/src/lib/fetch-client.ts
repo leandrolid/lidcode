@@ -1,18 +1,28 @@
 import { env } from "@/env";
 
-export async function fetchClient<T>(path: string, options: RequestInit) {
-  const headers = await getHeaders(options.headers);
-  const url = new URL(path, env.VITE_SHORTLID_URL);
-  const request = new Request(url, {
-    ...options,
-    headers,
-  });
-  const response = await fetch(request);
-  if (!response.ok) {
-    throw new Error(getMessageByStatusCode(response.status));
+type FetchResult<T> = [T, null] | [null, Error];
+
+export async function fetchClient<T>(
+  path: string,
+  options: RequestInit
+): Promise<FetchResult<T>> {
+  try {
+    const headers = await getHeaders(options.headers);
+    const url = new URL(path, env.VITE_SHORTLID_URL);
+    const request = new Request(url, {
+      ...options,
+      headers,
+    });
+    const response = await fetch(request);
+    if (!response.ok) {
+      throw new Error(getMessageByStatusCode(response.status));
+    }
+    const body = await getBody<T>(response);
+    return [body, null];
+  } catch (error) {
+    if (error instanceof Error) return [null, error];
+    return [null, new Error(String(error))];
   }
-  const body = await getBody<T>(response);
-  return body;
 }
 
 async function getHeaders(headers?: HeadersInit): Promise<HeadersInit> {
