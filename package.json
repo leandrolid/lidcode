@@ -4,7 +4,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:local": "dotenv -e .env -- turbo run build",
-    "dev": "dotenv -e .env -- turbo run dev",
+    "dev": "dotenv -e .env -- turbo run dev --log-prefix=none",
     "start:dev": "dotenv -e .env -- turbo run start:dev",
     "migrate:dev": "dotenv -e .env -- turbo run migrate:dev",
     "migrate:deploy": "dotenv -e .env -- turbo run migrate:deploy",
