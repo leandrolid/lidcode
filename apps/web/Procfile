@@ -1,1 +1,1 @@
-web: serve --single --cors -p $PORT
+web: serve --single --cors dist -p $PORT
