@@ -3,7 +3,7 @@ import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-ur
 import { env } from '@/env'
 import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
 import { CreateShortenUrlController } from '@infra/controllers/create-shorten-url/create-shorten-url.controller'
-import { RedirectToSiteController } from '@infra/controllers/redirect-to-site/redirect-to-site.controller'
+import { GetHomeController } from '@infra/controllers/get-home/get-home.controller'
 import { RedirectToUrlController } from '@infra/controllers/redirect-to-url/redirect-to-url.controller'
 import { HttpErrorHandler } from '@infra/middlewares/error.handler'
 import { UrlRepository } from '@infra/repositories/url/url.repository.imp'
@@ -28,7 +28,7 @@ async function main() {
       CreateShortenUrlUsecase,
       RedirectToUrlUsecase,
     ],
-    controllers: [RedirectToSiteController, CreateShortenUrlController, RedirectToUrlController],
+    controllers: [GetHomeController, CreateShortenUrlController, RedirectToUrlController],
     errorHandler: new HttpErrorHandler(),
   })
   await app.start(env.PORT)
