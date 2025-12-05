@@ -38,7 +38,7 @@ const NOT_FOUND_PAGE = `
             height: 100vh;
             margin: 0;
             font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #1a1a2e, #09090b);
             color: #e94560;
             overflow: hidden;
         }
