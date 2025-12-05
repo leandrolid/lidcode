@@ -23,30 +23,23 @@ const HOME = `
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0ib2tsY2goMC4xNDEgMC4wMDUgMjg1LjgyMykiLz4KPHN2ZyB4PSI0IiB5PSI0IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ib2tsY2goMC40ODggMC4yNDMgMjY0LjM3NikiPgo8cGF0aCBkPSJNNCAyaDEydjJINFYyeiIvPgo8cGF0aCBkPSJNNCA2aDEwdjJINFY2eiIvPgo8cGF0aCBkPSJNNCAxMGg4djJINFYxMHoiLz4KPHN2ZyB4PSIxNiIgeT0iMTIiIHdpZHRoPSI4IiBoZWlnaHQ9IjEyIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxOCIgcj0iNCIgZmlsbD0ib2tsY2goMC40ODggMC4yNDMgMjY0LjM3NikiLz4KPHN2ZyB4PSIxOCIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjE4IiByPSIyIiBmaWxsPSJva2xjaCgwLjk4NSAwIDApIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+Cjwvc3ZnPgo=" />
     <title>Lidcode - Services Hub</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7052489958602359" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        background: 'oklch(0.141 0.005 285.823)',
-                        foreground: 'oklch(0.985 0 0)',
-                        card: 'oklch(0.21 0.006 285.885)',
-                        'card-foreground': 'oklch(0.985 0 0)',
-                        primary: 'oklch(0.488 0.243 264.376)',
-                        'primary-foreground': 'oklch(0.97 0.014 254.604)',
-                        secondary: 'oklch(0.274 0.006 286.033)',
-                        'secondary-foreground': 'oklch(0.985 0 0)',
-                        muted: 'oklch(0.274 0.006 286.033)',
-                        'muted-foreground': 'oklch(0.705 0.015 286.067)',
-                        border: 'oklch(1 0 0 / 10%)',
-                        input: 'oklch(1 0 0 / 15%)',
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-background: oklch(0.141 0.005 285.823);
+        --color-foreground: oklch(0.985 0 0);
+        --color-card: oklch(0.21 0.006 285.885);
+        --color-card-foreground: oklch(0.985 0 0);
+        --color-primary: oklch(0.488 0.243 264.376);
+        --color-primary-foreground: oklch(0.97 0.014 254.604);
+        --color-secondary: oklch(0.274 0.006 286.033);
+        --color-secondary-foreground: oklch(0.985 0 0);
+        --color-muted: oklch(0.274 0.006 286.033);
+        --color-muted-foreground: oklch(0.705 0.015 286.067);
+        --color-border: oklch(1 0 0 / 10%);
+        --color-input: oklch(1 0 0 / 15%);
+      }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
