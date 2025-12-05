@@ -1,5 +1,4 @@
-import { env } from '@/env'
-import { Controller, Docs, Get, Response, type IResponse } from '@lidcode/framework'
+import { Controller, Docs, Get, NotFoundError, Response, type IResponse } from '@lidcode/framework'
 
 @Controller('')
 @Docs({
@@ -10,6 +9,7 @@ import { Controller, Docs, Get, Response, type IResponse } from '@lidcode/framew
 export class RedirectToSiteController {
   @Get('')
   async execute(@Response() response: IResponse) {
-    return response.redirect(env.SITE_URL, 301)
+    // return response.redirect(env.SITE_URL, 301)
+    throw new NotFoundError('Página não encontrada')
   }
 }
