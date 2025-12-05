@@ -7,7 +7,7 @@ export class HttpErrorHandler implements IErrorHandler {
     if (error instanceof ServerError && error.code < HttpStatusCode.INTERNAL_SERVER_ERROR) {
       return res
         .headers({ 'Content-Type': 'text/html; charset=utf-8' })
-        .status(error.code)
+        .status(error.code === 418 ? HttpStatusCode.OK : error.code)
         .send(NOT_FOUND_PAGE)
     }
     if (error instanceof ServerError) {
