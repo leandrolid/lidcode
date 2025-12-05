@@ -27,6 +27,7 @@ const NOT_FOUND_PAGE = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-adsense-account" content="ca-pub-7052489958602359">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7052489958602359" crossorigin="anonymous"></script>
     <title>404 - Oops! You Found the Void</title>
     <style>
