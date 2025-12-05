@@ -15,7 +15,8 @@
     "seed:dev": "prisma db seed",
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
-    "generate:dev": "prisma generate"
+    "generate:dev": "prisma generate",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@lidcode/framework": "^0.5.6",
