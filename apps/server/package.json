@@ -16,10 +16,12 @@
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "generate:dev": "prisma generate",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "db:open": "prisma studio"
   },
   "dependencies": {
-    "@lidcode/framework": "^0.6.0",
+    "@lidcode/cron": "^0.7.1",
+    "@lidcode/framework": "^0.7.1",
     "@prisma/client": "6.5.0",
     "@swc/core": "^1.15.3",
     "hashids": "^2.3.0",

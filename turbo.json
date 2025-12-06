@@ -32,6 +32,10 @@
     },
     "generate:dev": {
       "cache": false
+    },
+    "db:open": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

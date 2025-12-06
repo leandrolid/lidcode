@@ -10,6 +10,7 @@
     "migrate:deploy": "dotenv -e .env -- turbo run migrate:deploy",
     "seed:dev": "dotenv -e .env -- turbo run seed:dev",
     "generate:dev": "dotenv -e .env -- turbo run generate:dev",
+    "db:open": "dotenv -e .env -- turbo run db:open",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

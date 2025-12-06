@@ -26,4 +26,15 @@ export class UrlRepository implements IUrlRepository {
       where: { shortCode },
     })
   }
+
+  async deleteExpiredLinks(expirationDate: Date): Promise<number> {
+    const result = await this.repository.deleteMany({
+      where: {
+        createdAt: {
+          lt: expirationDate,
+        },
+      },
+    })
+    return result.count
+  }
 }

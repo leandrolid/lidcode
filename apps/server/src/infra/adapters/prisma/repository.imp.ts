@@ -98,6 +98,14 @@ export class PrismaRepository<T> implements IRepository<T> {
     })
   }
 
+  async deleteMany(filters: FindManyOptions<T>): Promise<{ count: number }> {
+    const where = this.prepareWhereClause(filters.where)
+    const result = await this.connection.query(this.modelName, 'deleteMany', {
+      where,
+    })
+    return { count: result.count as number }
+  }
+
   private prepareWhereClause(where: Filter<T>): Record<string, any> {
     const preparedWhere = Object.entries(where).reduce(
       (acc, [key, value]): Record<string, any> => {

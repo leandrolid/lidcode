@@ -12,6 +12,7 @@ export interface IRepository<Entity> {
   updateOne(filters: UpdateOneOptions<Entity>): Promise<Entity>
   updateMany(filters: UpdateManyOptions<Entity>): Promise<Entity[]>
   deleteById(id: string): Promise<void>
+  deleteMany(filters: FindManyOptions<Entity>): Promise<{ count: number }>
 }
 
 export type FindOneOptions<Entity> = {
