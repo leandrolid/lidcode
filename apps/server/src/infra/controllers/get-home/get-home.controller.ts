@@ -23,6 +23,15 @@ const HOME = `
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0ib2tsY2goMC4xNDEgMC4wMDUgMjg1LjgyMykiLz4KPHN2ZyB4PSI0IiB5PSI0IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ib2tsY2goMC40ODggMC4yNDMgMjY0LjM3NikiPgo8cGF0aCBkPSJNNCAyaDEydjJINFYyeiIvPgo8cGF0aCBkPSJNNCA2aDEwdjJINFY2eiIvPgo8cGF0aCBkPSJNNCAxMGg4djJINFYxMHoiLz4KPHN2ZyB4PSIxNiIgeT0iMTIiIHdpZHRoPSI4IiBoZWlnaHQ9IjEyIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxOCIgcj0iNCIgZmlsbD0ib2tsY2goMC40ODggMC4yNDMgMjY0LjM3NikiLz4KPHN2ZyB4PSIxOCIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjE4IiByPSIyIiBmaWxsPSJva2xjaCgwLjk4NSAwIDApIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+Cjwvc3ZnPgo=" />
     <title>Lidcode - Services Hub</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7052489958602359" crossorigin="anonymous"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMMJ470WX3"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-KMMJ470WX3');
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
       @theme {
