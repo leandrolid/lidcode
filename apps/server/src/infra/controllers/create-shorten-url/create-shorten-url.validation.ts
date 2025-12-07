@@ -1,15 +1,9 @@
-import { IValidation, IResponseValidation } from '@lidcode/framework'
 import z from 'zod'
+import { createZodDto } from 'nestjs-zod'
 
-export class CreateShortenUrlValidation implements IValidation {
-  body = z.object({
-    originalUrl: z.url(),
-  })
-}
+const CreateShortenUrlBodySchema = z.object({
+  originalUrl: z.url(),
+})
 
-export class CreateShortenUrlResponseValidation implements IResponseValidation {
-  201 = z.object({
-    shortUrl: z.string(),
-    originalUrl: z.string(),
-  })
-}
+// class is required for using DTO as a type
+export class CreateShortenUrlBody extends createZodDto(CreateShortenUrlBodySchema) {}

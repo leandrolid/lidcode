@@ -1,10 +1,8 @@
 import type { ICounterService } from '@domain/services/counter.service'
 import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
-import { Injectable } from '@lidcode/framework'
+import { Injectable } from '@nestjs/common'
 
-@Injectable({
-  token: 'ICounterService',
-})
+@Injectable()
 export class CounterService implements ICounterService {
   constructor(private readonly redisClientAdapter: RedisClientAdapter) {}
 

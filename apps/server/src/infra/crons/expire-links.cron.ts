@@ -1,9 +1,8 @@
 import type { IUrlRepository } from '@infra/repositories/url/url.repository'
-import { Cron, CronExpression, CronJob, TimeZones } from '@lidcode/cron'
-import { Inject, Injectable, Logger } from '@lidcode/framework'
+import { Inject, Injectable, Logger } from '@nestjs/common'
+import { Cron, CronExpression } from '@nestjs/schedule'
 
 @Injectable()
-@CronJob({ autoStart: true })
 export class ExpireLinksCron {
   private readonly logger = new Logger(ExpireLinksCron.name)
   constructor(
@@ -11,11 +10,10 @@ export class ExpireLinksCron {
     private readonly urlRepository: IUrlRepository,
   ) {}
 
-  // @Cron(CronExpression.EVERY_DAY_AT_2AM, { timeZone: TimeZones.AMERICA_SAO_PAULO })
-  @Cron(CronExpression.EVERY_10_SECONDS, { timeZone: TimeZones.AMERICA_SAO_PAULO })
+  @Cron(CronExpression.EVERY_DAY_AT_2AM, { timeZone: 'America/Sao_Paulo' })
   async execute() {
     const result = await this.urlRepository.deleteExpiredLinks(this.calculateThirtyDaysAgo())
-    this.logger.info(`Expired links deleted: ${result}`)
+    this.logger.debug(`Expired links deleted: ${result}`)
   }
 
   private calculateThirtyDaysAgo(): Date {

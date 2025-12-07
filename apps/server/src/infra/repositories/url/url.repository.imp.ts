@@ -1,15 +1,15 @@
 import type { IRepository } from '@domain/persistence/repository'
-import { InjectRepository } from '@infra/decorators/inject-repository.decorator'
 import type { CreateUrlInput, IUrlRepository } from '@infra/repositories/url/url.repository'
-import { Injectable } from '@lidcode/framework'
+import { Inject, Injectable } from '@nestjs/common'
 import type { ShortenedUrl } from '@prisma/client'
 
-@Injectable({
-  token: 'IUrlRepository',
-})
+// @Injectable({
+//   token: 'IUrlRepository',
+// })
+@Injectable()
 export class UrlRepository implements IUrlRepository {
   constructor(
-    @InjectRepository('ShortenedUrl')
+    @Inject('ShortenedUrl')
     private readonly repository: IRepository<ShortenedUrl>,
   ) {}
 

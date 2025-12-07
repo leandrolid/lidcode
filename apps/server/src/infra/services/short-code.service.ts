@@ -1,10 +1,8 @@
 import type { IShortCodeService } from '@domain/services/short-code.service'
-import { BadRequestError, Injectable } from '@lidcode/framework'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import Hashids from 'hashids'
 
-@Injectable({
-  token: 'IShortCodeService',
-})
+@Injectable()
 export class ShortCodeService implements IShortCodeService {
   private readonly hashids: Hashids
 
@@ -23,7 +21,7 @@ export class ShortCodeService implements IShortCodeService {
   getIdFromCode(hash: string): number | bigint {
     const [decoded] = this.hashids.decode(hash)
     if (!decoded) {
-      throw new BadRequestError('Invalid short code')
+      throw new BadRequestException('Invalid short code')
     }
     return decoded
   }

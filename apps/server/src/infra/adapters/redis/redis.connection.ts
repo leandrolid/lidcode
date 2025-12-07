@@ -1,8 +1,8 @@
 import { env } from '@/env'
-import { HttpStatusCode, Injectable, Logger, ServerError } from '@lidcode/framework'
+import { InternalServerErrorException, Logger } from '@nestjs/common'
 import IORedis from 'ioredis'
 
-@Injectable()
+// @Injectable()
 export class RedisClientAdapter {
   private readonly logger = new Logger('Redis')
   private readonly client = new IORedis(env.REDIS_URL, {
@@ -19,13 +19,13 @@ export class RedisClientAdapter {
     try {
       const result = await this.client.set(key, value)
       if (result !== 'OK') {
-        throw new ServerError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Failed to set value in Redis')
+        throw new InternalServerErrorException('Failed to set value in Redis')
       }
       return true
     } catch (error) {
-      if (error instanceof ServerError) throw error
+      if (error instanceof InternalServerErrorException) throw error
       console.error('Redis SET error:', error)
-      throw new ServerError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Redis SET operation failed')
+      throw new InternalServerErrorException('Redis SET operation failed')
     }
   }
 
@@ -34,7 +34,7 @@ export class RedisClientAdapter {
       return await this.client.get(key)
     } catch (error) {
       console.error('Redis GET error:', error)
-      throw new ServerError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Redis GET operation failed')
+      throw new InternalServerErrorException('Redis GET operation failed')
     }
   }
 
@@ -43,7 +43,7 @@ export class RedisClientAdapter {
       return await this.client.incr(key)
     } catch (error) {
       console.error('Redis INCR error:', error)
-      throw new ServerError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Redis INCR operation failed')
+      throw new InternalServerErrorException('Redis INCR operation failed')
     }
   }
 
@@ -52,7 +52,7 @@ export class RedisClientAdapter {
       return await this.client.del(key)
     } catch (error) {
       console.error('Redis DEL error:', error)
-      throw new ServerError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Redis DEL operation failed')
+      throw new InternalServerErrorException('Redis DEL operation failed')
     }
   }
 }

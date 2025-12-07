@@ -1,23 +1,37 @@
-import { HttpStatusCode, IErrorHandler, Logger, ServerError } from '@lidcode/framework'
-import { FastifyReply } from 'fastify'
+import { Catch, HttpException, HttpStatus, Logger, type ArgumentsHost } from '@nestjs/common'
+import { BaseExceptionFilter } from '@nestjs/core'
+import { ZodSerializationException } from 'nestjs-zod'
+import { flattenError, ZodError } from 'zod'
+import type { FastifyReply } from 'fastify'
 
-export class HttpErrorHandler implements IErrorHandler {
-  private readonly logger: Logger = new Logger('HttpErrorHandler')
-  execute(error: Error, res: FastifyReply) {
-    if (error instanceof ServerError && error.code < HttpStatusCode.INTERNAL_SERVER_ERROR) {
-      return res
+@Catch()
+export class HttpExceptionFilter extends BaseExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name)
+
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp()
+    const response = ctx.getResponse<FastifyReply>()
+    console.log('Exception caught by HttpExceptionFilter:', exception)
+    if (exception instanceof ZodSerializationException) {
+      const zodError = exception.getZodError()
+      if (zodError instanceof ZodError) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Validation failed',
+          errors: flattenError(zodError).fieldErrors,
+        })
+      }
+    }
+    if (
+      exception instanceof HttpException &&
+      exception.getStatus() < HttpStatus.INTERNAL_SERVER_ERROR
+    ) {
+      return response
+        .status(exception.getStatus())
         .headers({ 'Content-Type': 'text/html; charset=utf-8' })
-        .status(error.code)
         .send(NOT_FOUND_PAGE)
     }
-    if (error instanceof ServerError) {
-      return res.status(error.code).send({ message: error.message, errors: error.cause })
-    }
-    this.logger.error(error)
-    return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).send({
-      message: 'Error interno do servidor',
-      statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
-    })
+    super.catch(exception, host)
   }
 }
 
@@ -27,6 +41,7 @@ const NOT_FOUND_PAGE = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0ib2tsY2goMC4xNDEgMC4wMDUgMjg1LjgyMykiLz4KPHN2ZyB4PSI0IiB5PSI0IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ib2tsY2goMC40ODggMC4yNDMgMjY0LjM3NikiPgo8cGF0aCBkPSJNNCAyaDEydjJINFYyeiIvPgo8cGF0aCBkPSJNNCA2aDEwdjJINFY2eiIvPgo8cGF0aCBkPSJNNCAxMGg4djJINFYxMHoiLz4KPHN2ZyB4PSIxNiIgeT0iMTIiIHdpZHRoPSI4IiBoZWlnaHQ9IjEyIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxOCIgcj0iNCIgZmlsbD0ib2tsY2goMC40ODggMC4yNDMgMjY0LjM3NikiLz4KPHN2ZyB4PSIxOCIgeT0iMTYiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjE4IiByPSIyIiBmaWxsPSJva2xjaCgwLjk4NSAwIDApIi8+Cjwvc3ZnPgo8L3N2Zz4KPC9zdmc+Cjwvc3ZnPgo=" />
     <meta name="google-adsense-account" content="ca-pub-7052489958602359">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7052489958602359" crossorigin="anonymous"></script>
     <title>404 - Oops! You Found the Void</title>
@@ -121,5 +136,4 @@ const NOT_FOUND_PAGE = `
         <a href="https://short.lidco.de" class="back-link">Take Me Home</a>
     </div>
 </body>
-</html>
-`
+</html>`.replace(/(^\s+|\n)/gm, '')

@@ -1,12 +1,21 @@
 {
   "extends": "@lidcode/tsconfig/base.json",
   "include": [
-    "src/**/*.ts"
+    "src"
   ],
   "compilerOptions": {
-    "outDir": "dist",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2024",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@infra/*": [

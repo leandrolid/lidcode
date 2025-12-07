@@ -1,15 +1,15 @@
-import { Controller, Docs, Get, Response } from '@lidcode/framework'
+import { Controller, Get, Res } from '@nestjs/common'
 import type { FastifyReply } from 'fastify'
 
 @Controller('')
-@Docs({
-  tags: ['Static'],
-  title: 'Static redirect to site',
-  description: 'Controller to redirect to my personal site',
-})
+// @Docs({
+//   tags: ['Static'],
+//   title: 'Static redirect to site',
+//   description: 'Controller to redirect to my personal site',
+// })
 export class GetHomeController {
   @Get('')
-  async execute(@Response() res: FastifyReply) {
+  async execute(@Res() res: FastifyReply) {
     return res.headers({ 'Content-Type': 'text/html; charset=utf-8' }).status(200).send(HOME)
   }
 }

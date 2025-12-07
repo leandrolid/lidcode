@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "predev": "prisma generate",
-    "dev": "nodemon --watch src --ext ts --exec 'ts-node -r tsconfig-paths/register src/index.ts'",
-    "build": "tsup",
+    "dev": "nest start --watch",
+    "build": "nest build",
     "start": "node dist/index",
     "start:dev": "node dist/index",
     "test": "jest",
@@ -16,34 +16,37 @@
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "generate:dev": "prisma generate",
-    "heroku-postbuild": "npm run build",
-    "db:open": "prisma studio"
+    "db:open": "prisma studio",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
-    "@lidcode/cron": "^0.7.1",
-    "@lidcode/framework": "^0.7.1",
+    "@nestjs/common": "^11.1.9",
+    "@nestjs/core": "^11.1.9",
+    "@nestjs/platform-fastify": "^11.1.9",
+    "@nestjs/schedule": "^6.0.1",
     "@prisma/client": "6.5.0",
-    "@swc/core": "^1.15.3",
     "hashids": "^2.3.0",
     "ioredis": "^5.6.1",
-    "tsup": "^8.5.1",
+    "nestjs-zod": "^5.0.1",
+    "radash": "^12.1.1",
+    "reflect-metadata": "^0.2.2",
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.25.9",
-    "@babel/preset-typescript": "^7.28.5",
     "@lidcode/eslint": "^0.5.5",
     "@lidcode/prettier": "^0.5.6",
     "@lidcode/tsconfig": "^0.5.6",
+    "@nestjs/cli": "^11.0.14",
+    "@nestjs/schematics": "^11.0.9",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.0.0",
-    "babel-jest": "^30.2.0",
+    "@types/node": "^20.19.25",
     "jest": "^29.7.0",
-    "nodemon": "^3.1.9",
     "prisma": "6.5.0",
     "ts-jest": "^29.1.2",
+    "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0"
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3"
   },
   "prettier": "@lidcode/prettier"
 }

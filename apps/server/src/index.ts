@@ -1,46 +1,26 @@
-import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shorten-url.usecase'
-import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-url.usecase'
 import { env } from '@/env'
-import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
-import { CreateShortenUrlController } from '@infra/controllers/create-shorten-url/create-shorten-url.controller'
-import { GetHomeController } from '@infra/controllers/get-home/get-home.controller'
-import { RedirectToUrlController } from '@infra/controllers/redirect-to-url/redirect-to-url.controller'
-import { ExpireLinksCron } from '@infra/crons/expire-links.cron'
-import { HttpErrorHandler } from '@infra/middlewares/error.handler'
-import { UrlRepository } from '@infra/repositories/url/url.repository.imp'
-import { CounterService } from '@infra/services/counter.service'
-import { ShortCodeService } from '@infra/services/short-code.service'
-import { CronModule } from '@lidcode/cron'
-import { createServer } from '@lidcode/framework'
+import { RootModule } from '@infra/adapters/nest/__root'
+import { HttpExceptionFilter } from '@infra/adapters/nest/error-handler'
+import { Logger } from '@nestjs/common'
+import { NestFactory } from '@nestjs/core'
+import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify'
+
+const logger = new Logger('Bootstrap')
 
 async function main() {
-  const app = await createServer({
-    docs: env.NODE_ENV !== 'production',
-    zodValidation: true,
-    cors: ['*'],
-    multipartForm: {
-      files: 1,
-      fileSize: 5 * 1024 * 1024,
-    },
-    providers: [
-      RedisClientAdapter,
-      ShortCodeService,
-      CounterService,
-      UrlRepository,
-      CreateShortenUrlUsecase,
-      RedirectToUrlUsecase,
-    ],
-    controllers: [GetHomeController, CreateShortenUrlController, RedirectToUrlController],
-    errorHandler: new HttpErrorHandler(),
-    modules: [
-      CronModule.config({
-        options: {
-          crons: [ExpireLinksCron],
-        },
-      }),
-    ],
+  const app = await NestFactory.create<NestFastifyApplication>(
+    RootModule,
+    new FastifyAdapter({
+      logger: {
+        level: 'error',
+      },
+    }),
+  )
+  app.enableCors()
+  app.useGlobalFilters(new HttpExceptionFilter())
+  await app.listen(env.PORT, () => {
+    logger.debug(`Server is running at http://localhost:${env.PORT}`)
   })
-  await app.start(env.PORT)
 }
 
 main()

@@ -1,6 +1,6 @@
 import type { IShortCodeService } from '@domain/services/short-code.service'
 import type { IUrlRepository } from '@infra/repositories/url/url.repository'
-import { Inject, Injectable, NotFoundError } from '@lidcode/framework'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 
 type Input = {
   code: string
@@ -19,7 +19,7 @@ export class RedirectToUrlUsecase {
     const id = this.shortCodeService.getIdFromCode(input.code)
     const urlData = await this.urlRepository.findById(id as number)
     if (!urlData) {
-      throw new NotFoundError('URL not found')
+      throw new NotFoundException('URL not found')
     }
     return {
       originalUrl: urlData.originalUrl,
