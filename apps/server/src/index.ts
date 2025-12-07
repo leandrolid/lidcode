@@ -37,9 +37,15 @@ async function main() {
       jsonDocumentUrl: 'docs.json',
     })
   }
-  await app.listen(env.PORT, () => {
-    logger.debug(`Server is running at http://localhost:${env.PORT}`)
-  })
+  await app.listen(
+    {
+      port: env.PORT,
+      host: '0.0.0.0',
+    },
+    () => {
+      logger.debug(`Server is running at http://localhost:${env.PORT}`)
+    },
+  )
 }
 
 main()
