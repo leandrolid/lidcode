@@ -9,7 +9,8 @@
     "tsConfigPath": "./tsconfig.build.json",
     "deleteOutDir": true,
     "assets": [
-      "static/**/*"
+      "static/**/*",
+      "infra/adapters/prisma/generated/**/*"
     ],
     "watchAssets": true
   }
