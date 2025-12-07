@@ -108,75 +108,80 @@ export function Home() {
               No URLs shortened yet. Start by entering a URL above.
             </p>
           ) : (
-            <div className="space-y-4">
-              {shortenedUrls.map((item, index) => {
-                const isNewlyAdded = newlyAddedIndex === index;
-                return (
-                  <Fragment key={index}>
-                    <motion.div
-                      key={`${item.shortUrl}-${index}`}
-                      initial={
-                        isNewlyAdded
-                          ? { opacity: 0, y: -20, scale: 0.95 }
-                          : false
-                      }
-                      animate={
-                        isNewlyAdded ? { opacity: 1, y: 0, scale: 1 } : {}
-                      }
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                      className={cn({
-                        "ring-green-500 ring-opacity-50 rounded-lg p-2 bg-green-50 dark:bg-green-900/20":
-                          isNewlyAdded,
-                      })}
-                    >
-                      <div
-                        key={index}
-                        className="flex flex-col md:grid md:grid-cols-[1fr_15rem_6.75rem] items-center gap-2"
+            <>
+              <p className="text-center text-gray-500">
+                URLs created without an account will expire after 30 days
+              </p>
+              <div className="space-y-4">
+                {shortenedUrls.map((item, index) => {
+                  const isNewlyAdded = newlyAddedIndex === index;
+                  return (
+                    <Fragment key={index}>
+                      <motion.div
+                        key={`${item.shortUrl}-${index}`}
+                        initial={
+                          isNewlyAdded
+                            ? { opacity: 0, y: -20, scale: 0.95 }
+                            : false
+                        }
+                        animate={
+                          isNewlyAdded ? { opacity: 1, y: 0, scale: 1 } : {}
+                        }
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className={cn({
+                          "ring-green-500 ring-opacity-50 rounded-lg p-2 bg-green-50 dark:bg-green-900/20":
+                            isNewlyAdded,
+                        })}
                       >
-                        <p className="truncate text-base text-center w-full">
-                          {item.originalUrl}
-                        </p>
-                        <Button
-                          variant="link"
-                          asChild
-                          className="text-blue-400 cursor-pointer text-base w-fit text-center mx-auto"
+                        <div
+                          key={index}
+                          className="flex flex-col md:grid md:grid-cols-[1fr_15rem_6.75rem] items-center gap-2"
                         >
-                          <a
-                            href={item.shortUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {item.shortUrl}
-                          </a>
-                        </Button>
-                        <div className="flex gap-2 justify-between">
+                          <p className="truncate text-base text-center w-full">
+                            {item.originalUrl}
+                          </p>
                           <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => copyToClipboard(item.shortUrl)}
+                            variant="link"
+                            asChild
+                            className="text-blue-400 cursor-pointer text-base w-fit text-center mx-auto"
                           >
-                            Copy
+                            <a
+                              href={item.shortUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {item.shortUrl}
+                            </a>
                           </Button>
-                          <ConfirmDeleteDialog
-                            description="This action cannot be undone. This will permanently delete the short link from our servers."
-                            onConfirm={() => {
-                              setShortenedUrls((prev) =>
-                                prev.filter((_, i) => i !== index)
-                              );
-                            }}
-                          >
-                            <Button variant="ghost" size="sm">
-                              <Trash />
+                          <div className="flex gap-2 justify-between">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => copyToClipboard(item.shortUrl)}
+                            >
+                              Copy
                             </Button>
-                          </ConfirmDeleteDialog>
+                            <ConfirmDeleteDialog
+                              description="This action cannot be undone. This will permanently delete the short link from our servers."
+                              onConfirm={() => {
+                                setShortenedUrls((prev) =>
+                                  prev.filter((_, i) => i !== index)
+                                );
+                              }}
+                            >
+                              <Button variant="ghost" size="sm">
+                                <Trash />
+                              </Button>
+                            </ConfirmDeleteDialog>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
-                    <Separator className="my-2" orientation="horizontal" />
-                  </Fragment>
-                );
-              })}
-            </div>
+                      </motion.div>
+                      <Separator className="my-2" orientation="horizontal" />
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </>
           )}
         </Card>
       </div>
