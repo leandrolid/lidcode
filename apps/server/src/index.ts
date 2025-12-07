@@ -5,6 +5,9 @@ import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import path from 'node:path'
+import '@fastify/static'
+import fastifyCompress from '@fastify/compress'
 
 const logger = new Logger('Bootstrap')
 
@@ -17,6 +20,15 @@ async function main() {
       },
     }),
   )
+  app.register(fastifyCompress, {
+    encodings: ['gzip', 'deflate'],
+  })
+  app.useStaticAssets({
+    root: path.resolve(__dirname, 'static'),
+    cacheControl: true,
+    maxAge: 604800000, // 1 week
+    immutable: true,
+  })
   app.enableCors()
   if (env.NODE_ENV !== 'production') {
     const document = SwaggerModule.createDocument(
