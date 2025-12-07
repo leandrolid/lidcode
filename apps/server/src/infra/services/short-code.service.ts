@@ -1,11 +1,12 @@
 import { env } from '@/env'
 import type { IShortCodeService } from '@domain/services/short-code.service'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import Hashids from 'hashids'
 
 @Injectable()
 export class ShortCodeService implements IShortCodeService {
   private readonly hashids: Hashids
+  private readonly logger = new Logger(ShortCodeService.name)
 
   constructor() {
     this.hashids = new Hashids(
@@ -20,10 +21,18 @@ export class ShortCodeService implements IShortCodeService {
   }
 
   getIdFromCode(hash: string): number | bigint {
-    const [decoded] = this.hashids.decode(hash)
-    if (!decoded) {
+    try {
+      const [decoded] = this.hashids.decode(hash)
+      if (!decoded) {
+        throw new BadRequestException('Invalid short code')
+      }
+      return decoded
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error
+      }
+      this.logger.error(error)
       throw new BadRequestException('Invalid short code')
     }
-    return decoded
   }
 }
