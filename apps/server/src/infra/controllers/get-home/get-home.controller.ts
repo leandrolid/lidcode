@@ -1,14 +1,19 @@
 import { Controller, Get, Res } from '@nestjs/common'
+import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import type { FastifyReply } from 'fastify'
 
-@Controller('')
-// @Docs({
-//   tags: ['Static'],
-//   title: 'Static redirect to site',
-//   description: 'Controller to redirect to my personal site',
-// })
+@Controller()
 export class GetHomeController {
-  @Get('')
+  @Get()
+  @ApiOperation({
+    operationId: 'getHome',
+    summary: 'Get Home Page',
+    description: 'Controller to serve the home page of the service hub',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the home page HTML content.',
+  })
   async execute(@Res() res: FastifyReply) {
     return res.headers({ 'Content-Type': 'text/html; charset=utf-8' }).status(200).send(HOME)
   }

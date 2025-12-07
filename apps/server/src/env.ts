@@ -7,6 +7,7 @@ const envSchema = z.object({
   HEROKU_POSTGRESQL_ROSE_URL: z.string().optional().default('postgresql://localhost:5432/shortlid'),
   REDIS_URL: z.string().optional().default('redis://localhost:6379'),
   SITE_URL: z.url(),
+  HASH_CODE_SALT: z.string().min(8),
 })
 
 export const env = envSchema.parse(process.env)

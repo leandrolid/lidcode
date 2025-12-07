@@ -1,5 +1,6 @@
 import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shorten-url.usecase'
 import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-url.usecase'
+import { HttpExceptionFilter } from '@infra/adapters/nest/error-handler'
 import { PrismaDatabaseConnection } from '@infra/adapters/prisma/connection.imp'
 import { PrismaRepository } from '@infra/adapters/prisma/repository.imp'
 import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
@@ -11,7 +12,7 @@ import { UrlRepository } from '@infra/repositories/url/url.repository.imp'
 import { CounterService } from '@infra/services/counter.service'
 import { ShortCodeService } from '@infra/services/short-code.service'
 import { Module } from '@nestjs/common'
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
+import { APP_INTERCEPTOR, APP_PIPE, APP_FILTER } from '@nestjs/core'
 import { ScheduleModule } from '@nestjs/schedule'
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
 
@@ -50,6 +51,10 @@ import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
       provide: APP_INTERCEPTOR,
       useClass: ZodSerializerInterceptor,
     },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
-export class RootModule {}
+export class AppModule {}

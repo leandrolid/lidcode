@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import type { IShortCodeService } from '@domain/services/short-code.service'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import Hashids from 'hashids'
@@ -8,7 +9,7 @@ export class ShortCodeService implements IShortCodeService {
 
   constructor() {
     this.hashids = new Hashids(
-      'secret-salt-for-url-shortening-service',
+      env.HASH_CODE_SALT,
       3,
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
     )

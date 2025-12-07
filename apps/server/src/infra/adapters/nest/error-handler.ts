@@ -11,7 +11,6 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<FastifyReply>()
-    console.log('Exception caught by HttpExceptionFilter:', exception)
     if (exception instanceof ZodSerializationException) {
       const zodError = exception.getZodError()
       if (zodError instanceof ZodError) {
@@ -31,6 +30,7 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
         .headers({ 'Content-Type': 'text/html; charset=utf-8' })
         .send(NOT_FOUND_PAGE)
     }
+    this.logger.error('Exception caught by HttpExceptionFilter:', exception)
     super.catch(exception, host)
   }
 }
