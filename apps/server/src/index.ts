@@ -18,23 +18,25 @@ async function main() {
     }),
   )
   app.enableCors()
-  const document = SwaggerModule.createDocument(
-    app,
-    new DocumentBuilder()
-      .setTitle('ShortLid - URL Shortener')
-      .setDescription('API documentation for the ShortLid URL Shortener service')
-      .setVersion('1.0')
-      .addBearerAuth()
-      .addBasicAuth()
-      .setExternalDoc('JSON', '/docs.json')
-      .build(),
-  )
-  SwaggerModule.setup('v1/docs', app, cleanupOpenApiDoc(document), {
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-    jsonDocumentUrl: 'docs.json',
-  })
+  if (env.NODE_ENV !== 'production') {
+    const document = SwaggerModule.createDocument(
+      app,
+      new DocumentBuilder()
+        .setTitle('ShortLid - URL Shortener')
+        .setDescription('API documentation for the ShortLid URL Shortener service')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .addBasicAuth()
+        .setExternalDoc('JSON', '/docs.json')
+        .build(),
+    )
+    SwaggerModule.setup('v1/docs', app, cleanupOpenApiDoc(document), {
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+      jsonDocumentUrl: 'docs.json',
+    })
+  }
   await app.listen(env.PORT, () => {
     logger.debug(`Server is running at http://localhost:${env.PORT}`)
   })
