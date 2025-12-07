@@ -7,7 +7,7 @@ import type {
   UpdateOneOptions,
 } from '@domain/persistence/repository'
 import { PrismaDatabaseConnection } from '@infra/adapters/prisma/connection.imp'
-import { type Prisma } from '@prisma/client'
+import type { Prisma } from '@infra/adapters/prisma/generated'
 import { crush, isEmpty, isPrimitive } from 'radash'
 
 export class PrismaRepository<T> implements IRepository<T> {

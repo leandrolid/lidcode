@@ -2,13 +2,13 @@
 import { ErrorCode } from '@domain/enums/error-code.enum'
 import type { IDatabaseConnection } from '@domain/persistence/connection'
 import { PrismaErrorCode } from '@infra/adapters/prisma/error-code'
+import { PrismaClient, Prisma } from '@infra/adapters/prisma/generated'
 import {
   ConflictException,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common'
-import { Prisma, PrismaClient } from '@prisma/client'
 import { camel, get } from 'radash'
 
 export class PrismaDatabaseConnection implements IDatabaseConnection {

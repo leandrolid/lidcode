@@ -1,7 +1,7 @@
 import type { IRepository } from '@domain/persistence/repository'
+import type { ShortenedUrl } from '@infra/adapters/prisma/generated'
 import type { CreateUrlInput, IUrlRepository } from '@infra/repositories/url/url.repository'
 import { Inject, Injectable } from '@nestjs/common'
-import type { ShortenedUrl } from '@prisma/client'
 
 // @Injectable({
 //   token: 'IUrlRepository',
