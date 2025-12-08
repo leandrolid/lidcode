@@ -1,17 +1,19 @@
 import { env } from '@/env'
-import { CustomDrizzleLogger } from '@infra/adapters/drizzle/logger'
 import * as schema from '@infra/adapters/drizzle/schemas'
 import { Inject, type Provider } from '@nestjs/common'
 import 'dotenv/config'
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { Pool } from 'pg'
 
 export type Schema = typeof schema
 export type Drizzle = NodePgDatabase<Schema>
 
-const client = drizzle(env.HEROKU_POSTGRESQL_ROSE_URL, {
-  schema,
-  logger: new CustomDrizzleLogger(),
-}) as Drizzle
+const client = drizzle(
+  new Pool({
+    connectionString: env.HEROKU_POSTGRESQL_ROSE_URL,
+    ssl: env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
+  }),
+) as Drizzle
 
 export const DrizzleAsyncProvider = 'DrizzleAsyncProvider'
 

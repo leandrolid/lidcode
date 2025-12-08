@@ -1,10 +1,5 @@
-import dotenv from 'dotenv'
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { defineConfig } from 'drizzle-kit'
-import path from 'node:path'
-
-dotenv.config({
-  path: path.resolve(__dirname, '../../.env'),
-})
 
 export default defineConfig({
   dialect: 'postgresql',
@@ -16,7 +11,12 @@ export default defineConfig({
     prefix: 'timestamp',
   },
   dbCredentials: {
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
     url: process.env.HEROKU_POSTGRESQL_ROSE_URL!,
+    ssl:
+      process.env.NODE_ENV === 'production'
+        ? {
+            rejectUnauthorized: false,
+          }
+        : undefined,
   },
 })
