@@ -16,6 +16,7 @@ export class UrlRepository implements IUrlRepository {
     const [shortUrl] = await this.database
       .insert(schema.shortenedUrls)
       .values({
+        id: input.id,
         originalUrl: input.originalUrl,
         shortCode: input.shortCode,
       })
