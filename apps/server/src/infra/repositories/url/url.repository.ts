@@ -1,4 +1,4 @@
-import type { ShortenedUrl } from '@infra/adapters/prisma/generated'
+import type { ShortenedUrl } from '@domain/entities/shortened-url.entity'
 
 export interface IUrlRepository {
   create(input: CreateUrlInput): Promise<ShortenedUrl>

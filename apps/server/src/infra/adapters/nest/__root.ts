@@ -1,5 +1,6 @@
 import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shorten-url.usecase'
 import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-url.usecase'
+import { DrizzleModuleProvider } from '@infra/adapters/drizzle/client'
 import { HttpExceptionFilter } from '@infra/adapters/nest/error-handler'
 import { PrismaDatabaseConnection } from '@infra/adapters/prisma/connection.imp'
 import { PrismaRepository } from '@infra/adapters/prisma/repository.imp'
@@ -24,6 +25,7 @@ import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
     RedirectToUrlUsecase,
     RedisClientAdapter,
     ExpireLinksCron,
+    DrizzleModuleProvider,
     {
       provide: 'IShortCodeService',
       useClass: ShortCodeService,
