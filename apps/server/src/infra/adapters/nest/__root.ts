@@ -2,8 +2,6 @@ import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shor
 import { RedirectToUrlUsecase } from '@/application/usecases/urls/redirect-to-url.usecase'
 import { DrizzleModuleProvider } from '@infra/adapters/drizzle/client'
 import { HttpExceptionFilter } from '@infra/adapters/nest/error-handler'
-import { PrismaDatabaseConnection } from '@infra/adapters/prisma/connection.imp'
-import { PrismaRepository } from '@infra/adapters/prisma/repository.imp'
 import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
 import { CreateShortenUrlController } from '@infra/controllers/create-shorten-url/create-shorten-url.controller'
 import { GetHomeController } from '@infra/controllers/get-home/get-home.controller'
@@ -37,13 +35,6 @@ import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
     {
       provide: 'IUrlRepository',
       useClass: UrlRepository,
-    },
-    {
-      provide: 'ShortenedUrl',
-      useFactory: () => {
-        const connection = PrismaDatabaseConnection.getInstance()
-        return new PrismaRepository(connection, 'ShortenedUrl')
-      },
     },
     {
       provide: APP_PIPE,
