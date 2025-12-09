@@ -1,5 +1,5 @@
 {
-  "name": "shortlid",
+  "name": "lidcode-services",
   "private": true,
   "scripts": {
     "build": "turbo run build",
