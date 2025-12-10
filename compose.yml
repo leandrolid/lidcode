@@ -1,8 +1,8 @@
 services:
-  server:
+  shortlid-server:
     build:
       context: .
-      dockerfile: Dockerfile.server
+      dockerfile: apps/shortlid-server/Dockerfile
     ports:
       - "3333:3333"
     env_file:
@@ -11,10 +11,12 @@ services:
       - NODE_ENV=production
     depends_on:
       - redis
-  web:
+  shortlid-web:
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: apps/shortlid-web/Dockerfile
+      args:
+        - SERVER=http://localhost:3333
     ports:
       - "3000:80"
     env_file:
@@ -22,7 +24,7 @@ services:
     environment:
       - NODE_ENV=production
     depends_on:
-      - server
+      - shortlid-server
   redis:
     image: redis:7.2-alpine
     container_name: redis-local-secure
@@ -42,3 +44,7 @@ services:
       --tls-auth-clients no 
       --aclfile /etc/redis/users.acl 
       --appendonly yes
+
+networks:
+  default:
+    driver: bridge
