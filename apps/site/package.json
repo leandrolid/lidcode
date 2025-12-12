@@ -1,18 +1,29 @@
 {
   "name": "site",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "serve --cors public -p 8081",
-    "build": "echo \"No build step required\"",
-    "start": "pm2 serve public $PORT --no-daemon",
-    "start:dev": "pm2 serve public 8081 --no-daemon",
-    "heroku-postbuild": "npm run build"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p $PORT",
+    "start:dev": "next start -p 8081",
+    "lint": "eslint"
   },
   "dependencies": {
-    "pm2": "^6.0.14"
+    "@ls/ui": "*",
+    "next": "16.0.10",
+    "react": "19.2.1",
+    "react-dom": "19.2.1"
   },
   "devDependencies": {
-    "serve": "14.2.5"
-  }
+    "@lidcode/eslint": "^0.5.5",
+    "@lidcode/prettier": "^0.5.6",
+    "@lidcode/tsconfig": "^0.5.6",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  },
+  "prettier": "@lidcode/prettier"
 }

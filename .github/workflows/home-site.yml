@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - apps/home-site/**
+      - apps/site/**
       - packages/ui/**
 
 jobs:
@@ -27,11 +27,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./apps/home-site/Dockerfile
+          file: ./apps/site/Dockerfile
           push: true
-          tags: leandrolid/lidcode:home-site-latest
+          tags: leandrolid/lidcode:site-latest
       - uses: misaya98/docker2heroku@main
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          docker_image: leandrolid/lidcode:home-site-latest
+          docker_image: leandrolid/lidcode:site-latest
           heroku_app_name: lidcode-site
