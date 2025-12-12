@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+@import '@ls/ui/tailwind.css';
+
+@layer components {
+  .not-found-stars {
+    @apply absolute top-0 left-0 w-full h-full pointer-events-none;
+  }
+
+  .not-found-star {
+    @apply absolute w-0.5 h-0.5 bg-white rounded-full animate-[twinkle_2s_infinite];
+  }
+
+  @keyframes twinkle {
+
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+}
