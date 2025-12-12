@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://lidco.de/sitemap.xml
+
+# Allow crawling of main pages
+Allow: /
+Allow: /static/
+
+# Disallow sensitive or private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /.env
+Disallow: /logs/
+Disallow: /temp/
+
+# Crawl delay to be respectful to server resources
+Crawl-delay: 1
+
+# Contact information
+# Website: https://lidco.de
+# Contact: https://github.com/leandrolid
