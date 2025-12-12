@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: "Checkout GitHub Action"
+      - name: Checkout GitHub
         uses: actions/checkout@v3
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -33,7 +33,8 @@ jobs:
           file: ./apps/site/Dockerfile
           push: true
           tags: leandrolid/lidcode:site-latest
-      - uses: misaya98/docker2heroku@main
+      - name: Deploy to Heroku
+        uses: misaya98/docker2heroku@main
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           docker_image: leandrolid/lidcode:site-latest
