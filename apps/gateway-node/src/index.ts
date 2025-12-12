@@ -1,8 +1,8 @@
-import os from 'node:os'
 import cluster from 'node:cluster'
+import { env } from './env.js'
 
 function runPrimaryProcess() {
-  const processesCount = os.cpus().length
+  const processesCount = env.WORKER_PROCESSES
   console.log(`Primary ${process.pid} is running.`)
   console.log(`Starting primary process. Spawning ${processesCount} worker processes...`)
   for (let i = 0; i < processesCount; i++) {

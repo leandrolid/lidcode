@@ -9,5 +9,6 @@ export const env = z
     AIKIDO_DEBUG: z.enum(['true', 'false']).default('false'),
     AIKIDO_BLOCK: z.enum(['true', 'false']).default('true'),
     JWT_SECRET: z.string().min(1),
+    WORKER_PROCESSES: z.coerce.number().optional().default(4),
   })
   .parse(process.env)
