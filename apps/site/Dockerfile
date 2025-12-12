@@ -11,13 +11,11 @@ FROM node:22-alpine AS production
 
 WORKDIR /app
 
-ENV PORT=8080
-
 COPY --from=build /app/apps/site/package.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apps/site/.next ./.next
 COPY --from=build /app/apps/site/public ./public
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["npm", "run", "start"]
