@@ -1,1 +1,1 @@
-web: npm run start
+web: proxychains4 -f vendor/proxychains-ng/conf/proxychains.conf npm run start
