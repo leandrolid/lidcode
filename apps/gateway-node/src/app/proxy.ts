@@ -1,8 +1,8 @@
 import { request as httpRequest, type IncomingMessage, type ServerResponse } from 'node:http'
 import { request as httpsRequest } from 'node:https'
 import { URL } from 'node:url'
-import { StatusCode } from '../constants/status-code'
-import { Ports } from '../constants/ports'
+import { StatusCode } from '../enums/status-code'
+import { Ports } from '../enums/ports'
 
 export function proxyRequest(
   req: IncomingMessage,

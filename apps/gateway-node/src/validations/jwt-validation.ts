@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import jws from 'jws'
 import { env } from '../env'
-import { StatusCode } from '../constants/status-code'
+import { StatusCode } from '../enums/status-code'
 
 export function jwtValidation(
   req: IncomingMessage,
