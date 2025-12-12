@@ -8,7 +8,7 @@ export default function NotFound() {
         'bg-[linear-gradient(135deg,#1a1a2e,#09090b)]': true,
       })}
       style={{
-        fontFamily: "'Courier New', monospace",
+        fontFamily: "'Courier Prime', monospace",
       }}
     >
       <div className="not-found-stars">

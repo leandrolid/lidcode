@@ -1,12 +1,18 @@
 import '@/styles/global.css'
 
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Courier_Prime } from 'next/font/google'
 import Script from 'next/script'
 
 const inter = Inter({
   variable: '--font-inter-sans',
   subsets: ['latin'],
+})
+
+const courierPrime = Courier_Prime({
+  variable: '--font-courier-prime',
+  subsets: ['latin'],
+  weight: ['400', '700'],
 })
 
 export const metadata: Metadata = {
@@ -35,7 +41,7 @@ export default function RootLayout({
   return (
     <>
       <html lang="en">
-        <body className={`${inter.variable} antialiased dark`}>
+        <body className={`${inter.variable} ${courierPrime.variable} antialiased dark`}>
           {children}
           <Script
             strategy="beforeInteractive"
