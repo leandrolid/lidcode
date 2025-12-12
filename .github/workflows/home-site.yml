@@ -1,0 +1,37 @@
+name: Home Site Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/home-site/**
+      - packages/ui/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/home-site/Dockerfile
+          push: true
+          tags: leandrolid/lidcode:home-site-latest
+      - uses: misaya98/docker2heroku@main
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          docker_image: leandrolid/lidcode:home-site-latest
+          heroku_app_name: lidcode-site
