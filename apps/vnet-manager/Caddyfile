@@ -1,0 +1,8 @@
+:{$PORT} {
+    handle_path /web* {
+        root * /var/www/web-ui
+        file_server
+    }
+
+    reverse_proxy localhost:8080
+}
