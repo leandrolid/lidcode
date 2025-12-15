@@ -128,7 +128,7 @@ export default function Home() {
 
           <div className="text-center">
             <a
-              href="https://short.lidco.de"
+              href="https://shortlid.lidco.de"
               className="inline-block px-6 py-2 bg-sidebar-primary rounded-md hover:bg-primary font-medium transition-colors"
             >
               Try ShortLid →

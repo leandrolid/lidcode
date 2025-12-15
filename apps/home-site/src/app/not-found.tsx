@@ -41,7 +41,7 @@ export default function NotFound() {
           Even our URLs sometimes take unexpected detours.
         </p>
         <a
-          href="https://short.lidco.de"
+          href="https://shortlid.lidco.de"
           className="inline-block mt-8 px-6 py-3 bg-[#3282b8] text-white rounded-full hover:bg-[#0f4c75] transition-colors duration-300"
         >
           Take Me Home
