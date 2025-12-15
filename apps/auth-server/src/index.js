@@ -38,6 +38,8 @@ const server = createServer((req, res) => {
   res.end(JSON.stringify({ message: 'Not Found' }))
 })
 
-server.listen(process.env.PORT || 3333, () => {
+const PORT = process.env.PORT || 3333
+
+server.listen(PORT, () => {
   console.log(`Auth server running on port ${PORT}`)
 })
