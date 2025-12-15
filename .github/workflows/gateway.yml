@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - apps/gateway/**
-      - .github/**
+      - .github/workflows/gateway.yml
 
 jobs:
   build:
@@ -33,8 +33,8 @@ jobs:
           push: true
           tags: leandrolid/lidcode:gateway-latest
       - name: Deploy to Heroku
-        uses: misaya98/docker2heroku@main
+        uses: ./.github/heroku
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           docker_image: leandrolid/lidcode:gateway-latest
-          heroku_app_name: lidcode-gateway-dev
+          heroku_app_name: lidcode-gateway

@@ -1,0 +1,101 @@
+name: 'docker2heroku'
+description: 'Pulls a Docker image from a registry, optionally creates a new Heroku app, sets config vars, and deploys.'
+author: 'leandrolid'
+
+inputs:
+  heroku_api_key:
+    description: 'Your Heroku API Key.'
+    required: true
+  docker_image:
+    description: 'The full Docker Hub image name and tag (e.g., user/repo:latest).'
+    required: true
+  heroku_app_name:
+    description: 'The name of the Heroku app (optional, defaults to a sanitized image name).'
+    required: false
+  create_new_app:
+    description: 'Set to "true" to create a new Heroku app.'
+    required: false
+    default: 'false'
+  heroku_config_vars:
+    description: 'Heroku config variables (one per line, e.g., KEY=VALUE).'
+    required: false
+  heroku_dyno_name:
+    description: "Heroku dyno name (default is 'web')."
+    required: false
+    default: "web"
+  dockerhub_username:
+    description: 'Your Docker Hub username (for private images or to avoid rate limits).'
+    required: false
+  dockerhub_token:
+    description: 'Your Docker Hub token (for private images or to avoid rate limits).'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Determine Heroku App Name
+      id: vars
+      shell: bash
+      run: |
+        APP_NAME=""
+        if [[ -n "${{ inputs.heroku_app_name }}" ]]; then
+          echo "Using provided Heroku app name: ${{ inputs.heroku_app_name }}"
+          APP_NAME="${{ inputs.heroku_app_name }}"
+        elif [[ "${{ inputs.create_new_app }}" == "true" ]]; then
+          echo "Heroku app name not provided, deriving from Docker image and adding random suffix..."
+          BASE_NAME=$(echo "${{ inputs.docker_image }}" | sed 's/:.*//' | sed 's#.*/##')
+          RANDOM_SUFFIX=$(openssl rand -hex 3)
+          APP_NAME="$BASE_NAME-$RANDOM_SUFFIX"
+          echo "Derived and randomized app name: $APP_NAME"
+        else
+          echo "::error::Invalid input. You must provide an 'Heroku app name' if you are not creating a new app."
+          exit 1
+        fi
+        echo "app_name=$APP_NAME" >> $GITHUB_OUTPUT
+
+    - name: Log in to Heroku Container Registry
+      shell: bash
+      run: echo "${{ inputs.heroku_api_key }}" | docker login --username=_ --password-stdin registry.heroku.com
+
+    - name: Log in to Docker Hub
+      if: ${{ inputs.dockerhub_username && inputs.dockerhub_token }}
+      uses: docker/login-action@v3
+      with:
+        username: ${{ inputs.dockerhub_username }}
+        password: ${{ inputs.dockerhub_token }}
+
+    - name: Install Heroku CLI
+      shell: bash
+      run: curl https://cli-assets.heroku.com/install.sh | sh
+
+    - name: Create Heroku App if requested
+      if: ${{ inputs.create_new_app == 'true' }}
+      shell: bash
+      run: heroku create ${{ steps.vars.outputs.app_name }} --stack container
+      env:
+        HEROKU_API_KEY: ${{ inputs.heroku_api_key }}
+
+    - name: Pull image from Docker Hub
+      shell: bash
+      run: docker pull ${{ inputs.docker_image }}
+
+    - name: Retag Docker image for Heroku
+      shell: bash
+      run: docker tag ${{ inputs.docker_image }} registry.heroku.com/${{ steps.vars.outputs.app_name }}/${{ inputs.heroku_dyno_name }}
+
+    - name: Push image to Heroku Container Registry
+      shell: bash
+      run: docker push registry.heroku.com/${{ steps.vars.outputs.app_name }}/${{ inputs.heroku_dyno_name }}
+
+    - name: Set Heroku config variables
+      if: ${{ inputs.heroku_config_vars != '' }}
+      shell: bash
+      run: echo "${{ inputs.heroku_config_vars }}" | xargs heroku config:set --app ${{ steps.vars.outputs.app_name }}
+      env:
+        HEROKU_API_KEY: ${{ inputs.heroku_api_key }}
+
+    - name: Release new image on Heroku
+      shell: bash
+      run: heroku container:release ${{ inputs.heroku_dyno_name }} --app ${{ steps.vars.outputs.app_name }}
+      env:
+        HEROKU_API_KEY: ${{ inputs.heroku_api_key }}

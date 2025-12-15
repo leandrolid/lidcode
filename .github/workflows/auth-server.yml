@@ -1,4 +1,4 @@
-name: Home Site Deployment
+name: Auth Server Deployment
 
 on:
   workflow_dispatch:
@@ -6,9 +6,8 @@ on:
     branches:
       - main
     paths:
-      - apps/site/**
-      - packages/ui/**
-      - .github/workflows/site.yml
+      - apps/auth-server/**
+      - .github/workflows/auth-server.yml
 
 jobs:
   build:
@@ -30,12 +29,12 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./apps/site/Dockerfile
+          file: ./apps/auth-server/Dockerfile
           push: true
-          tags: leandrolid/lidcode:site-latest
+          tags: leandrolid/lidcode:auth-server-latest
       - name: Deploy to Heroku
         uses: ./.github/heroku
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          docker_image: leandrolid/lidcode:site-latest
-          heroku_app_name: lidcode-site
+          docker_image: leandrolid/lidcode:auth-server-latest
+          heroku_app_name: lidcode-auth
