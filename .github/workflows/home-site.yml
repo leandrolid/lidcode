@@ -6,9 +6,9 @@ on:
     branches:
       - main
     paths:
-      - apps/site/**
+      - apps/home-site/**
       - packages/ui/**
-      - .github/workflows/site.yml
+      - .github/workflows/home-site.yml
 
 jobs:
   build:
