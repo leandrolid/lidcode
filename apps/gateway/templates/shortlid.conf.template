@@ -13,6 +13,11 @@ server {
     proxy_pass http://shortlid_service;
     proxy_set_header Host short.lidco.de;
   }
+  
+  location /v1 {
+    proxy_pass http://shortlid_service;
+    proxy_set_header Host short.lidco.de;
+  }
 
   location / {
     return 301 https://site.lidco.de$request_uri;
