@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./apps/site/Dockerfile
+          file: ./apps/home-site/Dockerfile
           push: true
           tags: leandrolid/lidcode:site-latest
       - name: Deploy to Heroku
