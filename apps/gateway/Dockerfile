@@ -2,6 +2,7 @@ FROM nginx:alpine
 
 WORKDIR /etc/nginx
 
-COPY apps/gateway/default.conf.template ./templates/default.conf.template
+RUN rm -f conf.d/default.conf templates/default.conf.template
+COPY apps/gateway/templates ./templates/
 
-CMD ["/bin/sh", "-c", "envsubst '\\$PORT' < ./templates/default.conf.template > ./conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]
