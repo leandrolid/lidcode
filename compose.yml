@@ -1,4 +1,24 @@
 services:
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    depends_on:
+      - auth-server
+  auth-server:
+    build:
+      context: .
+      dockerfile: apps/auth-server/Dockerfile
+    ports:
+      - "3333:3333"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
   shortlid-server:
     build:
       context: .
