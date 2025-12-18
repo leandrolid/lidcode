@@ -30,6 +30,19 @@ async function main() {
     immutable: true,
   })
   app.enableCors()
+  setupSwagger(app)
+  await app.listen(
+    {
+      port: env.PORT,
+      host: '0.0.0.0',
+    },
+    () => {
+      logger.debug(`Server is running at http://localhost:${env.PORT}`)
+    },
+  )
+}
+
+function setupSwagger(app: NestFastifyApplication) {
   if (env.NODE_ENV !== 'production') {
     const document = SwaggerModule.createDocument(
       app,
@@ -49,15 +62,6 @@ async function main() {
       jsonDocumentUrl: 'docs.json',
     })
   }
-  await app.listen(
-    {
-      port: env.PORT,
-      host: '0.0.0.0',
-    },
-    () => {
-      logger.debug(`Server is running at http://localhost:${env.PORT}`)
-    },
-  )
 }
 
 main()
