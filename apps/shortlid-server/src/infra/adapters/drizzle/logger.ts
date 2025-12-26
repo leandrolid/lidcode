@@ -14,13 +14,13 @@ export class CustomDrizzleLogger implements DrizzleLogger {
       return 'NULL'
     }
     if (typeof param === 'string') {
-      return `'${param.replace(/'/g, "''")}'`
+      return `'${param.replace(/(^'|'$)/g, '')}'`
     }
     if (param instanceof Date) {
       return `'${param.toISOString()}'`
     }
     if (typeof param === 'object') {
-      return `'${JSON.stringify(param).replace(/'/g, "''")}'`
+      return `'${JSON.stringify(param).replace(/(^'|'$)/g, '')}'`
     }
     return String(param)
   }
