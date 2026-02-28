@@ -1,3 +1,0 @@
-upstream auth_service {
-  server auth.lidco.de;
-}

@@ -1,5 +1,0 @@
-server {
-  listen ${PORT} default_server;
-
-  return 301 https://site.lidco.de$request_uri;
-}
