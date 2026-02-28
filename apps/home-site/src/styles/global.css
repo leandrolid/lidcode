@@ -1,4 +1,4 @@
-@import '@ls/ui/tailwind.css';
+@import '@lidcode/ui/tailwind.css';
 
 @layer components {
   .not-found-stars {
