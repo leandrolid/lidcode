@@ -6,7 +6,7 @@ import IORedis from 'ioredis'
 export class RedisClientAdapter {
   private readonly logger = new Logger('Redis')
   private readonly client = new IORedis(env.REDIS_URL, {
-    tls: /rediss?:\/\/(.*?):(.*?)/.test(env.REDIS_URL) ? { rejectUnauthorized: false } : undefined,
+    tls: /^rediss:\/\//.test(env.REDIS_URL) ? { rejectUnauthorized: false } : undefined,
   })
 
   constructor() {
