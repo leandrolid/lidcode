@@ -2,12 +2,6 @@ name: Shortlid Server Deployment
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - apps/shortlid-server/**
-      - .github/workflows/shortlid-server.yml
 
 jobs:
   build:
