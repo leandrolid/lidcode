@@ -1,0 +1,12 @@
+{
+  "name": "@lidcode/tsconfig",
+  "version": "0.7.0",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "build": "echo \"No build step required\"",
+    "publish:npm": "npm run build && npm publish --access public"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

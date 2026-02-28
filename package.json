@@ -1,5 +1,5 @@
 {
-  "name": "lidcode-services",
+  "name": "lidcode",
   "private": true,
   "scripts": {
     "build": "turbo run build",

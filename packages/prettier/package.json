@@ -1,0 +1,13 @@
+{
+  "name": "@lidcode/prettier",
+  "version": "0.7.0",
+  "main": "index.mjs",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "build": "echo \"No build step required\"",
+    "publish:npm": "npm run build && npm publish --access public"
+  },
+  "dependencies": {
+    "prettier": "^3.5.3"
+  }
+}
