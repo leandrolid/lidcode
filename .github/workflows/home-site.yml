@@ -2,13 +2,6 @@ name: Home Site Deployment
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - apps/home-site/**
-      - packages/ui/**
-      - .github/workflows/home-site.yml
 
 jobs:
   build:
