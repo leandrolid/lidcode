@@ -1,4 +1,4 @@
-import { cn } from '@ls/ui/cn'
+import { cn } from '@lidcode/ui/cn'
 
 export default function NotFound() {
   return (
@@ -41,7 +41,7 @@ export default function NotFound() {
           Even our URLs sometimes take unexpected detours.
         </p>
         <a
-          href="https://shortlid.lidco.de"
+          href="https://short.lidco.de"
           className="inline-block mt-8 px-6 py-3 bg-[#3282b8] text-white rounded-full hover:bg-[#0f4c75] transition-colors duration-300"
         >
           Take Me Home
