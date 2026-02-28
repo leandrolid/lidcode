@@ -20,6 +20,9 @@ async function main() {
       },
     }),
   )
+  app.enableCors({
+    origin: '*',
+  })
   app.register(fastifyCompress, {
     encodings: ['gzip', 'deflate'],
   })
@@ -29,7 +32,6 @@ async function main() {
     maxAge: 604800000, // 1 week
     immutable: true,
   })
-  app.enableCors()
   setupSwagger(app)
   await app.listen(
     {
