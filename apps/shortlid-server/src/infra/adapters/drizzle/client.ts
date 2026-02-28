@@ -11,7 +11,7 @@ export type Drizzle = NodePgDatabase<Schema>
 
 const client = drizzle(
   new Pool({
-    connectionString: env.HEROKU_POSTGRESQL_ROSE_URL,
+    connectionString: env.DATABASE_URL,
     ssl: env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
   }),
   { schema, logger: new CustomDrizzleLogger() },

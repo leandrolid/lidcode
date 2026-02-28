@@ -11,7 +11,7 @@ export default defineConfig({
     prefix: 'timestamp',
   },
   dbCredentials: {
-    url: process.env.HEROKU_POSTGRESQL_ROSE_URL!,
+    url: process.env.DATABASE_URL!,
     ssl:
       process.env.NODE_ENV === 'production'
         ? {
