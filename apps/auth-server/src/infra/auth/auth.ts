@@ -13,6 +13,7 @@ export function createAuthInstance(
   redisStorage: RedisStorageService,
 ) {
   return betterAuth({
+    basePath: '/v1/auth',
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
 

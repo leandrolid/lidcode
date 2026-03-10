@@ -12,13 +12,15 @@ import fastifyCompress from '@fastify/compress'
 const logger = new Logger('Bootstrap')
 
 async function main() {
+  const fastifyAdapter = new FastifyAdapter({
+    logger: {
+      level: 'error',
+    },
+  })
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({
-      logger: {
-        level: 'error',
-      },
-    }),
+    fastifyAdapter,
     { bodyParser: false },
   )
   // CORS configuration
