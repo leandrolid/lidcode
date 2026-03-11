@@ -7,5 +7,13 @@ export const env = z
       .default("development"),
     VITE_SHORTLID_URL: z.url(),
     VITE_AUTH_URL: z.string().url(),
+    VITE_ENABLE_GOOGLE_AUTH: z
+      .string()
+      .optional()
+      .transform((v) => v === "true"),
+    VITE_ENABLE_GITHUB_AUTH: z
+      .string()
+      .optional()
+      .transform((v) => v === "true"),
   })
   .parse(import.meta.env);

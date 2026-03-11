@@ -14,6 +14,8 @@ import {
 import { ConfirmDeleteDialog } from "@/components/dialogs/confirm-delete";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/providers/auth";
+import { Link } from "@tanstack/react-router";
 
 type ButtonState = "idle" | "loading" | "success" | "error";
 
@@ -24,6 +26,7 @@ export function Home() {
     CreateShortUrlResponse[]
   >("urls", []);
   const [newlyAddedIndex, setNewlyAddedIndex] = useState<number | null>(null);
+  const { isAuthenticated } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +44,14 @@ export function Home() {
       setTimeout(() => setButtonState("idle"), 2000);
       return;
     }
-    setShortenedUrls((prev) => {
-      const newList = [response, ...prev];
-      setNewlyAddedIndex(0);
-      setTimeout(() => setNewlyAddedIndex(null), 2000);
-      return newList;
-    });
+    if (!isAuthenticated) {
+      setShortenedUrls((prev) => {
+        const newList = [response, ...prev];
+        setNewlyAddedIndex(0);
+        setTimeout(() => setNewlyAddedIndex(null), 2000);
+        return newList;
+      });
+    }
     setUrl("");
     setButtonState("success");
     setTimeout(() => setButtonState("idle"), 2000);
@@ -102,6 +107,21 @@ export function Home() {
           </form>
         </Card>
 
+        {isAuthenticated && buttonState === "success" && (
+          <Card className="w-full p-8 text-center space-y-3">
+            <p className="text-green-600 dark:text-green-400 font-medium text-lg">
+              URL created successfully!
+            </p>
+            <p className="text-gray-500">
+              View and manage your shortened URLs in the dashboard.
+            </p>
+            <Button asChild variant="outline">
+              <Link to="/dashboard">Go to Dashboard</Link>
+            </Button>
+          </Card>
+        )}
+
+        {!isAuthenticated && (
         <Card className="w-full p-8">
           {shortenedUrls.length === 0 ? (
             <p className="text-center text-gray-500">
@@ -184,6 +204,7 @@ export function Home() {
             </>
           )}
         </Card>
+        )}
       </div>
     </div>
   );
