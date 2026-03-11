@@ -7,6 +7,8 @@ import { RedisClientAdapter } from '@infra/adapters/redis/redis.connection'
 import { CreateShortenUrlController } from '@infra/controllers/create-shorten-url/create-shorten-url.controller'
 import { GetHomeController } from '@infra/controllers/get-home/get-home.controller'
 import { RedirectToUrlController } from '@infra/controllers/redirect-to-url/redirect-to-url.controller'
+import { ListUrlsController } from '@infra/controllers/list-urls/list-urls.controller'
+import { DeleteUrlController } from '@infra/controllers/delete-url/delete-url.controller'
 import { ExpireLinksCron } from '@infra/crons/expire-links.cron'
 import { UrlRepository } from '@infra/repositories/url/url.repository.imp'
 import { CounterService } from '@infra/services/counter.service'
@@ -19,7 +21,7 @@ import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod'
 
 @Module({
   imports: [ScheduleModule.forRoot()],
-  controllers: [GetHomeController, CreateShortenUrlController, RedirectToUrlController],
+  controllers: [GetHomeController, CreateShortenUrlController, RedirectToUrlController, ListUrlsController, DeleteUrlController],
   providers: [
     CreateShortenUrlUsecase,
     RedirectToUrlUsecase,
