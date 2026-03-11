@@ -25,6 +25,6 @@ import { RedisModule } from '@infra/adapters/redis/redis.module'
     }),
   ],
   providers: [RedisStorageService],
-  exports: [BetterAuthNestModule, RedisStorageService],
+  exports: [RedisStorageService],
 })
 export class AuthModule {}
