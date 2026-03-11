@@ -3,7 +3,7 @@ import { Drizzle, InjectDrizzle } from '@infra/adapters/drizzle/client'
 import * as schema from '@infra/adapters/drizzle/schemas'
 import type { CreateUrlInput, IUrlRepository } from '@infra/repositories/url/url.repository'
 import { ConflictException, Injectable } from '@nestjs/common'
-import { eq, lt } from 'drizzle-orm'
+import { and, eq, isNull, lt } from 'drizzle-orm'
 
 @Injectable()
 export class UrlRepository implements IUrlRepository {
@@ -51,7 +51,7 @@ export class UrlRepository implements IUrlRepository {
   async deleteExpiredLinks(expirationDate: Date): Promise<number> {
     const result = await this.database
       .delete(schema.shortenedUrls)
-      .where(lt(schema.shortenedUrls.createdAt, expirationDate))
+      .where(and(lt(schema.shortenedUrls.createdAt, expirationDate), isNull(schema.shortenedUrls.userId)))
       .returning()
       .execute()
     return result.length

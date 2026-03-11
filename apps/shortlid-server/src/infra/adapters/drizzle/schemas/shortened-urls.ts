@@ -1,4 +1,4 @@
-import { pgTable, timestamp, text, uniqueIndex, serial } from 'drizzle-orm/pg-core'
+import { pgTable, timestamp, text, uniqueIndex, serial, uuid, index } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
 
 export const shortenedUrls = pgTable(
@@ -14,11 +14,13 @@ export const shortenedUrls = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     deletedAt: timestamp('deleted_at', { precision: 3, mode: 'date' }),
+    userId: uuid('user_id'),
   },
   (table) => [
     uniqueIndex('shortened_urls_short_code_key').using(
       'btree',
       table.shortCode.asc().nullsLast().op('text_ops'),
     ),
+    index('shortened_urls_user_id_idx').on(table.userId),
   ],
 )

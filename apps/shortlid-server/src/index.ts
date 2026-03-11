@@ -21,7 +21,8 @@ async function main() {
     }),
   )
   app.enableCors({
-    origin: '*',
+    origin: env.CORS_ORIGINS,
+    credentials: true,
   })
   app.register(fastifyCompress, {
     encodings: ['gzip', 'deflate'],

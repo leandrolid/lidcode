@@ -6,5 +6,6 @@ export class ShortenedUrl {
     public createdAt: Date,
     public updatedAt: Date,
     public deletedAt: Date | null,
+    public userId: string | null,
   ) {}
 }
