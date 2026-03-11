@@ -12,14 +12,13 @@ import { RedisModule } from '@infra/adapters/redis/redis.module'
     DrizzleModule,
     RedisModule,
     BetterAuthNestModule.forRootAsync({
+      disableControllers: true,
       imports: [DrizzleModule, RedisModule],
       useFactory: (
         db: NodePgDatabase<Record<string, never>>,
         redisStorage: RedisStorageService,
       ) => ({
         auth: createAuthInstance(db, redisStorage),
-        prefix: '/v1/auth',
-        disableBodyParser: true,
         disableTrustedOriginsCors: true,
       }),
       inject: ['DrizzleAsyncProvider', RedisStorageService],

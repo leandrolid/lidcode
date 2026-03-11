@@ -81,6 +81,17 @@ describe('auth-server E2E', () => {
       }
     })
 
+    // Register mock Better Auth handler (mimics registerBetterAuthRoutes in index.ts)
+    await fastifyInstance.register(async (scope: any) => {
+      scope.removeAllContentTypeParsers()
+      scope.addContentTypeParser('*', (_req: any, _payload: any, done: any) => done(null))
+      scope.all('/v1/auth/*', async (_request: any, reply: any) => {
+        reply.hijack()
+        reply.raw.writeHead(200, { 'content-type': 'application/json' })
+        reply.raw.end(JSON.stringify({ session: null }))
+      })
+    })
+
     await app.init()
     await app.getHttpAdapter().getInstance().ready()
   })
@@ -173,6 +184,26 @@ describe('auth-server E2E', () => {
       expect(body).toHaveProperty('users')
       expect(Array.isArray(body.users)).toBe(true)
       expect(body.users.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('Better Auth routes (handler registration)', () => {
+    it('should not return 404 for GET /v1/auth/session when handler is registered', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/v1/auth/session',
+      })
+      expect(response.statusCode).not.toBe(404)
+    })
+
+    it('should not return 404 for POST /v1/auth/sign-in/email when handler is registered', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/v1/auth/sign-in/email',
+        payload: { email: 'test@test.com', password: 'testpassword' },
+        headers: { 'content-type': 'application/json' },
+      })
+      expect(response.statusCode).not.toBe(404)
     })
   })
 })

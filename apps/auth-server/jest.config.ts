@@ -8,6 +8,7 @@ const config: Config = {
   moduleNameMapper: {
     '^better-auth$': '<rootDir>/__mocks__/better-auth-core.ts',
     '^better-auth/adapters/drizzle$': '<rootDir>/__mocks__/better-auth-core.ts',
+    '^better-auth/node$': '<rootDir>/__mocks__/better-auth-node.ts',
     '^@thallesp/nestjs-better-auth$': '<rootDir>/__mocks__/better-auth.ts',
     '^@infra/(.*)$': '<rootDir>/src/infra/$1',
     '^@app/(.*)$': '<rootDir>/src/app/$1',
