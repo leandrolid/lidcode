@@ -11,4 +11,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/v1/auth": {
+        target: "http://localhost:3340",
+        changeOrigin: true,
+      },
+      "/v1": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+      },
+    },
+  },
 });
