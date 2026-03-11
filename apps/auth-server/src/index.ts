@@ -80,7 +80,7 @@ async function registerBetterAuthRoutes(app: NestFastifyApplication) {
       reply.hijack()
       try {
         await betterAuthHandler(request.raw, reply.raw)
-      } catch (err) {
+      } catch (_err) {
         if (!reply.raw.headersSent) {
           reply.raw.writeHead(500, { 'content-type': 'application/json' })
           reply.raw.end(JSON.stringify({ error: 'Internal Server Error' }))
