@@ -19,6 +19,7 @@ export class UrlRepository implements IUrlRepository {
         id: input.id,
         originalUrl: input.originalUrl,
         shortCode: input.shortCode,
+        userId: input.userId,
       })
       .returning()
       .execute()
@@ -46,6 +47,22 @@ export class UrlRepository implements IUrlRepository {
       .limit(1)
       .offset(0)
     return shortUrl || null
+  }
+
+  async findByUserId(userId: string): Promise<ShortenedUrl[]> {
+    return this.database
+      .select()
+      .from(schema.shortenedUrls)
+      .where(eq(schema.shortenedUrls.userId, userId))
+  }
+
+  async deleteByIdAndUserId(id: number, userId: string): Promise<boolean> {
+    const result = await this.database
+      .delete(schema.shortenedUrls)
+      .where(and(eq(schema.shortenedUrls.id, id), eq(schema.shortenedUrls.userId, userId)))
+      .returning()
+      .execute()
+    return result.length > 0
   }
 
   async deleteExpiredLinks(expirationDate: Date): Promise<number> {

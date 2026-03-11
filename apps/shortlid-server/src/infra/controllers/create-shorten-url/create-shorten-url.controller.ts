@@ -1,4 +1,6 @@
 import { CreateShortenUrlUsecase } from '@/application/usecases/urls/create-shorten-url.usecase'
+import type { AuthUser } from '@domain/services/auth.service'
+import { CurrentUser } from '@infra/adapters/nest/auth.guard'
 import { CreateShortenUrlBody } from '@infra/controllers/create-shorten-url/create-shorten-url.validation'
 import { Body, Controller, Post } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
@@ -19,9 +21,13 @@ export class CreateShortenUrlController {
     description: 'The shortened URL has been successfully created.',
   })
   @ApiBody({ type: CreateShortenUrlBody.Output })
-  async execute(@Body() body: CreateShortenUrlBody) {
+  async execute(
+    @Body() body: CreateShortenUrlBody,
+    @CurrentUser() user: AuthUser | null,
+  ) {
     return this.createShortenUrlUsecase.execute({
-      ...body,
+      originalUrl: body.originalUrl,
+      userId: user?.id,
     })
   }
 }
