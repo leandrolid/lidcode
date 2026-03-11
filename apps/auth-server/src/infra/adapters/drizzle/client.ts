@@ -10,7 +10,7 @@ export type Schema = typeof schema
 export type Drizzle = NodePgDatabase<Schema>
 
 const pool = new Pool({
-  connectionString: env.DATABASE_URL,
+  connectionString: env.DATABASE_AUTH_URL,
   ssl: env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
 })
 

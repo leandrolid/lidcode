@@ -3,8 +3,7 @@ import z from 'zod'
 const envSchema = z.object({
   PORT: z.coerce.number().default(3340),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  BASE_URL: z.url().transform((url) => url.replace(/\/$/, '')),
-  DATABASE_URL: z.string().optional().default('postgresql://localhost:5432/authdb'),
+  DATABASE_AUTH_URL: z.string().optional().default('postgresql://localhost:5432/authdb'),
   REDIS_URL: z.string().optional().default('redis://localhost:6379'),
 
   // Better Auth
@@ -27,14 +26,14 @@ const envSchema = z.object({
     .transform((val) => {
       if (!val) return []
       return val
-        .split(',',)
+        .split(',')
         .map((origin) => origin.trim())
         .filter((origin) => origin.length > 0)
     }),
 
   // Resend (REQUIRED)
   RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required'),
-  RESEND_FROM_EMAIL: z.string().email('RESEND_FROM_EMAIL must be a valid email'),
+  RESEND_FROM_EMAIL: z.email('RESEND_FROM_EMAIL must be a valid email'),
 
   // OAuth gating
   AUTH_ENABLE_GOOGLE: z
