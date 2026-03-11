@@ -81,9 +81,10 @@ export function DashboardPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                <div className="hidden md:grid md:grid-cols-[1fr_20rem_auto] gap-4 px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border/40 pb-4 mb-4">
+                <div className="hidden md:grid md:grid-cols-[1fr_20rem_8rem_auto] gap-4 px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border/40 pb-4 mb-4">
                   <span>Original URL</span>
                   <span className="text-center">Short Link</span>
+                  <span>Created</span>
                   <span className="text-right w-16">Actions</span>
                 </div>
                 
@@ -98,7 +99,7 @@ export function DashboardPage() {
                       transition={{ duration: 0.2 }}
                       className="group"
                     >
-                      <div className="flex flex-col md:grid md:grid-cols-[1fr_20rem_auto] items-center gap-4 px-4 py-3 rounded-xl transition-colors hover:bg-muted/30">
+                      <div className="flex flex-col md:grid md:grid-cols-[1fr_20rem_8rem_auto] items-center gap-4 px-4 py-3 rounded-xl transition-colors hover:bg-muted/30">
                         <p className="truncate text-sm font-medium w-full text-foreground/80 group-hover:text-foreground transition-colors" title={item.originalUrl}>
                           {item.originalUrl}
                         </p>
@@ -117,6 +118,14 @@ export function DashboardPage() {
                               {item.shortUrl}
                             </a>
                           </Button>
+                        </div>
+                        
+                        <div className="w-full md:w-auto text-xs text-muted-foreground">
+                          {new Date(item.createdAt).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
                         </div>
                         
                         <div className="flex gap-2 justify-end w-full md:w-auto mt-2 md:mt-0 opacity-100 md:opacity-50 group-hover:opacity-100 transition-opacity">
