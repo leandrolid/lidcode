@@ -6,5 +6,6 @@ export const env = z
       .enum(["development", "production", "test"])
       .default("development"),
     VITE_SHORTLID_URL: z.url(),
+    VITE_AUTH_URL: z.string().url(),
   })
   .parse(import.meta.env);

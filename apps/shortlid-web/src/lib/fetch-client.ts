@@ -7,11 +7,10 @@ export async function fetchClient<T>(
   options: RequestInit
 ): Promise<FetchResult<T>> {
   try {
-    const headers = await getHeaders(options.headers);
     const url = new URL(path, env.VITE_SHORTLID_URL);
     const request = new Request(url, {
       ...options,
-      headers,
+      credentials: "include",
     });
     const response = await fetch(request);
     if (!response.ok) {
@@ -25,16 +24,6 @@ export async function fetchClient<T>(
   }
 }
 
-async function getHeaders(headers?: HeadersInit): Promise<HeadersInit> {
-  const token = localStorage.getItem("token");
-  if (token) {
-    return {
-      ...headers,
-      Authorization: `Bearer ${token}`,
-    };
-  }
-  return headers || {};
-}
 
 function getBody<T>(response: Response): Promise<T> {
   const contentType = response.headers.get("Content-Type");
