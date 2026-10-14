@@ -22,6 +22,7 @@
   "devDependencies": {
     "@lidcode/eslint": "*",
     "@lidcode/prettier": "*",
+    "@tanstack/router-plugin": "^1.168.46",
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
