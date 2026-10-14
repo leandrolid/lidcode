@@ -1,0 +1,20 @@
+{
+  "extends": "@lidcode/tsconfig/base.json",
+  "include": ["src", "jest.config.ts", "drizzle.config.ts"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@app/*": ["src/application/*"],
+      "@domain/*": ["src/domain/*"],
+      "@infra/*": ["src/infra/*"]
+    }
+  }
+}

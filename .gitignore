@@ -58,3 +58,6 @@ AGENTS.md
 .opencode/
 .claude/
 .sisyphus/
+
+# omo temporary artifacts
+.omo/
