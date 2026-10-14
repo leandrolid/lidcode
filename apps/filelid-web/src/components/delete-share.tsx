@@ -1,22 +1,25 @@
 import { useState } from 'react'
 import { LoaderCircle, Trash2 } from 'lucide-react'
-import { deleteShare } from '../lib/api'
+import { ApiError, deleteShare } from '../lib/api'
+import { useLanguage } from '../lib/i18n'
+import type { MessageKey } from '../lib/translations'
 
 type Props = { id: string; token: string; onDeleted: () => void }
 
 export function DeleteShare({ id, token, onDeleted }: Props) {
+  const { t } = useLanguage()
   const [confirming, setConfirming] = useState(false)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<MessageKey | null>(null)
 
   async function removeShare() {
     setBusy(true)
-    setError('')
+    setError(null)
     try {
       await deleteShare(id, token)
       onDeleted()
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Could not delete this share.')
+      setError(error instanceof ApiError ? error.messageKey : 'errors.delete')
     } finally {
       setBusy(false)
     }
@@ -26,25 +29,25 @@ export function DeleteShare({ id, token, onDeleted }: Props) {
     <div className="delete-share">
       {confirming ? (
         <>
-          <p>Delete every file and disable this link?</p>
+          <p>{t('delete.confirm')}</p>
           <div className="delete-actions">
             <button className="text-button danger" disabled={busy} onClick={removeShare}>
               {busy ? <LoaderCircle size={15} className="spin" /> : <Trash2 size={15} />}{' '}
-              {busy ? 'Deleting...' : 'Yes, delete share'}
+              {t(busy ? 'delete.busy' : 'delete.yes')}
             </button>
             <button className="text-button" disabled={busy} onClick={() => setConfirming(false)}>
-              Keep it
+              {t('delete.keep')}
             </button>
           </div>
         </>
       ) : (
         <button className="text-button" onClick={() => setConfirming(true)}>
-          <Trash2 size={14} /> Delete early
+          <Trash2 size={14} /> {t('delete.early')}
         </button>
       )}
       {error && (
         <p className="error-message" role="alert">
-          {error} Access may already be disabled; cleanup will retry automatically.
+          {t(error)} {t('delete.cleanup')}
         </p>
       )}
     </div>

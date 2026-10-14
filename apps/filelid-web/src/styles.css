@@ -39,12 +39,14 @@ body::before {
   pointer-events: none;
 }
 button,
-input {
+input,
+select {
   font: inherit;
 }
 button,
 a,
-input {
+input,
+select {
   -webkit-tap-highlight-color: transparent;
 }
 button,
@@ -63,7 +65,8 @@ a {
 }
 button:focus-visible,
 a:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 5px;
 }
@@ -177,6 +180,10 @@ button {
   font-size: 1.16em;
   letter-spacing: -3.5px;
   line-height: 1.1;
+}
+.hero h1:lang(pt-BR) em {
+  font-size: 0.95em;
+  letter-spacing: -2px;
 }
 .headline-dot {
   display: inline-block;
@@ -595,16 +602,34 @@ button {
   justify-content: space-between;
   align-items: center;
   gap: 14px;
+  flex-wrap: wrap;
   color: var(--faint);
 }
 .site-footer > .mono {
   font-size: 8px;
 }
-.site-footer > span:last-child {
+.footer-note {
   display: flex;
   align-items: center;
   gap: 18px;
   font-size: 11px;
+}
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.language-selector > svg {
+  color: var(--accent);
+}
+.language-selector select {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 8px;
+  font-size: 11px;
+  cursor: pointer;
 }
 .footer-spark {
   color: var(--accent);
@@ -1293,8 +1318,9 @@ button {
     align-items: flex-start;
     justify-content: center;
     gap: 13px;
+    padding: 20px 0;
   }
-  .site-footer > span:last-child {
+  .footer-note {
     width: 100%;
     justify-content: space-between;
     font-size: 10px;
