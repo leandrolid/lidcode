@@ -1,5 +1,4 @@
-import type { AuthUser } from '@domain/services/auth.service'
-import type { IAuthService } from '@domain/services/auth.service'
+import type { AuthUser, IAuthService } from '@domain/services/auth.service'
 import {
   CanActivate,
   createParamDecorator,
@@ -30,9 +29,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context
-      .switchToHttp()
-      .getRequest<FastifyRequest & { user?: AuthUser | null }>()
+    const request = context.switchToHttp().getRequest<FastifyRequest & { user?: AuthUser | null }>()
 
     const cookieHeader = request.headers.cookie ?? ''
 
