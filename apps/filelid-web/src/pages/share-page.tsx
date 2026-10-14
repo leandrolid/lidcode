@@ -12,10 +12,13 @@ import { ApiError, downloadUrl, getManagementToken, getShare, type Share } from 
 import { formatRemaining, formatSize } from '../lib/format'
 import { DeleteShare } from '../components/delete-share'
 import { FileRow } from '../components/file-row'
+import { useLanguage } from '../lib/i18n'
+import type { MessageKey } from '../lib/translations'
 
 export function SharePage({ id }: { id: string }) {
+  const { language, t } = useLanguage()
   const [share, setShare] = useState<Share | null>(null)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<MessageKey | null>(null)
   const [loading, setLoading] = useState(true)
   const [gone, setGone] = useState(false)
   const [now, setNow] = useState(Date.now())
@@ -25,13 +28,13 @@ export function SharePage({ id }: { id: string }) {
   useEffect(() => {
     const controller = new AbortController()
     setLoading(true)
-    setError('')
+    setError(null)
     getShare(id, controller.signal)
       .then(setShare)
       .catch((error: unknown) => {
         if (controller.signal.aborted) return
         if (error instanceof ApiError && [404, 410].includes(error.status)) setGone(true)
-        else setError(error instanceof Error ? error.message : 'Could not load this share.')
+        else setError(error instanceof ApiError ? error.messageKey : 'errors.load')
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false)
@@ -53,7 +56,7 @@ export function SharePage({ id }: { id: string }) {
       <main className="share-page">
         <div className="share-card loading-card" role="status">
           <LoaderCircle className="spin" size={28} />
-          <p>Finding your little delivery...</p>
+          <p>{t('share.loading')}</p>
         </div>
       </main>
     )
@@ -62,17 +65,15 @@ export function SharePage({ id }: { id: string }) {
       <main className="share-page">
         <div className="share-card empty-card">
           <PackageOpen size={55} strokeWidth={1} />
-          <span className="mono">NOTHING LEFT BEHIND</span>
+          <span className="mono">{t('share.goneLabel')}</span>
           <h1>
-            This one has
+            {t('share.goneTitle')}
             <br />
-            <em>moved on.</em>
+            <em>{t('share.goneEmphasis')}</em>
           </h1>
-          <p>
-            The share has expired, been deleted, or doesn&apos;t exist. Temporary means temporary.
-          </p>
+          <p>{t('share.goneDescription')}</p>
           <a className="primary-button" href="/">
-            Make a new share <ArrowUpRight size={19} />
+            {t('share.new')} <ArrowUpRight size={19} />
           </a>
         </div>
       </main>
@@ -82,13 +83,13 @@ export function SharePage({ id }: { id: string }) {
       <main className="share-page">
         <div className="share-card empty-card">
           <h1>
-            A small
+            {t('share.errorTitle')}
             <br />
-            <em>interruption.</em>
+            <em>{t('share.errorEmphasis')}</em>
           </h1>
-          <p role="alert">{error || 'This share could not be loaded.'}</p>
+          <p role="alert">{t(error || 'errors.load')}</p>
           <button className="primary-button" onClick={() => setAttempt(attempt + 1)}>
-            Try again <ArrowUpRight size={19} />
+            {t('share.retry')} <ArrowUpRight size={19} />
           </button>
         </div>
       </main>
@@ -98,34 +99,36 @@ export function SharePage({ id }: { id: string }) {
   return (
     <main className="share-page">
       <a className="back-link mono" href="/">
-        <ArrowLeft size={15} /> BACK TO FILELID
+        <ArrowLeft size={15} /> {t('share.back')}
       </a>
       <section className="share-card">
         <div className="panel-eyebrow">
-          <span className="mono">A LITTLE DELIVERY FOR YOU</span>
+          <span className="mono">{t('share.delivery')}</span>
           <span className="live-dot" />
         </div>
         <div className="download-heading">
           <h1>
-            Here for a<br />
-            <em>good time.</em>
+            {t('share.title')}
+            <br />
+            <em>{t('share.titleEmphasis')}</em>
           </h1>
           <span className="delivery-icon">
             <PackageOpen size={48} strokeWidth={1} />
           </span>
         </div>
         <p className="download-description">
-          Someone sent you {share.files.length === 1 ? 'a file' : 'a few files'}. Take what you need
-          before they go.
+          {t(share.files.length === 1 ? 'share.description.one' : 'share.description.other')}
         </p>
         <div className="share-stats">
           <span>
             <Clock3 size={16} />
-            {formatRemaining(remaining)}
+            {formatRemaining(remaining, t)}
           </span>
           <span className="mono">
-            {share.files.length} {share.files.length === 1 ? 'FILE' : 'FILES'}{' '}
-            <span className="stat-divider">/</span> {formatSize(total)}
+            {t(share.files.length === 1 ? 'common.files.one' : 'common.files.other', {
+              count: share.files.length,
+            })}{' '}
+            <span className="stat-divider">/</span> {formatSize(total, language)}
           </span>
         </div>
         <ul className="file-list download-files">
@@ -136,36 +139,36 @@ export function SharePage({ id }: { id: string }) {
                 href={downloadUrl(share.id, file.id)}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Download ${file.name}`}
+                aria-label={t('share.downloadLabel', { name: file.name })}
               >
                 <Download size={17} />
-                <span>Download</span>
+                <span>{t('share.download')}</span>
               </a>
             </FileRow>
           ))}
         </ul>
         <p className="download-expiry">
-          Available until{' '}
-          {new Date(share.expiresAt).toLocaleString('en', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
+          {t('share.expiry', {
+            date: new Date(share.expiresAt).toLocaleString(language, {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+            }),
           })}
-          . Files are removed automatically.
         </p>
         <div className="download-footer">
           <span>
-            <ShieldCheck size={15} /> No account needed.
+            <ShieldCheck size={15} /> {t('share.noAccount')}
           </span>
           {token && <DeleteShare id={id} token={token} onDeleted={() => setGone(true)} />}
         </div>
       </section>
       <p className="share-outro">
-        Have something to pass along?{' '}
+        {t('share.outro')}{' '}
         <a href="/">
-          Make a little space. <ArrowUpRight size={14} />
+          {t('share.outroLink')} <ArrowUpRight size={14} />
         </a>
       </p>
     </main>

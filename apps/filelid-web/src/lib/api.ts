@@ -1,3 +1,5 @@
+import type { MessageKey } from './translations'
+
 export type SharedFile = { id: string; name: string; size: number; contentType: string }
 export type Share = { id: string; createdAt: string; expiresAt: string; files: SharedFile[] }
 export type CreatedShare = { share: Share; shareUrl: string; managementToken: string }
@@ -6,24 +8,37 @@ const apiBase = (import.meta.env.VITE_FILELID_API_URL || '/api').replace(/\/$/, 
 
 export class ApiError extends Error {
   constructor(
-    message: string,
+    public messageKey: MessageKey,
     public status: number,
   ) {
-    super(message)
+    super(messageKey)
   }
 }
 
-function errorMessage(body: unknown, status: number): string {
+const apiErrorMessages = new Map<string, MessageKey>([
+  ['Invalid expiration', 'errors.expiration'],
+  ['A share can contain at most 10 files', 'errors.tooManyFiles'],
+  ['Invalid filename', 'errors.filename'],
+  ['Choose at least one file', 'errors.noFiles'],
+  ['Upload session expired', 'errors.uploadExpired'],
+  ['Share not found', 'errors.notFound'],
+  ['This share has expired or was deleted', 'errors.gone'],
+  ['Invalid management token', 'errors.token'],
+  ['Expected a multipart file upload', 'errors.invalidUpload'],
+  ['Only files fields are accepted', 'errors.invalidUpload'],
+])
+
+function errorMessage(body: unknown, status: number): MessageKey {
+  if (status === 413) return 'errors.tooLarge'
+  if (status === 429) return 'errors.rateLimit'
   if (
     typeof body === 'object' &&
     body !== null &&
     'message' in body &&
     typeof body.message === 'string'
   )
-    return body.message
-  if (status === 413) return 'Your files are too large. Keep the total under 100 MB.'
-  if (status === 429) return 'A few too many requests. Give it a minute and try again.'
-  return 'Something went wrong. Please try again.'
+    return apiErrorMessages.get(body.message) ?? 'errors.generic'
+  return 'errors.generic'
 }
 
 export function uploadShare(
@@ -43,9 +58,8 @@ export function uploadShare(
       if (request.status >= 200 && request.status < 300) resolve(request.response as CreatedShare)
       else reject(new ApiError(errorMessage(request.response, request.status), request.status))
     }
-    request.onerror = () =>
-      reject(new Error('Could not reach Filelid. Check your connection and try again.'))
-    request.ontimeout = () => reject(new Error('The upload timed out. Please try again.'))
+    request.onerror = () => reject(new ApiError('errors.connection', 0))
+    request.ontimeout = () => reject(new ApiError('errors.timeout', 0))
     request.onabort = () => reject(new DOMException('Upload cancelled', 'AbortError'))
     const form = new FormData()
     for (const file of files) form.append('files', file)

@@ -12,25 +12,28 @@ import {
   Upload,
   X,
 } from 'lucide-react'
-import { rememberToken, uploadShare, type CreatedShare } from '../lib/api'
+import { ApiError, rememberToken, uploadShare, type CreatedShare } from '../lib/api'
 import { formatSize } from '../lib/format'
+import { useLanguage } from '../lib/i18n'
+import type { MessageKey } from '../lib/translations'
 import { DeleteShare } from './delete-share'
 import { FileRow } from './file-row'
 
 const maxBytes = 100 * 1024 * 1024
 const expirationOptions = [
-  { hours: 1, label: '1 hour' },
-  { hours: 24, label: '24 hours' },
-  { hours: 168, label: '7 days' },
-]
+  { hours: 1, label: 'upload.oneHour' },
+  { hours: 24, label: 'upload.oneDay' },
+  { hours: 168, label: 'upload.oneWeek' },
+] as const
 
 export function UploadPanel() {
+  const { language, t } = useLanguage()
   const [files, setFiles] = useState<File[]>([])
   const [expiresIn, setExpiresIn] = useState(24)
   const [dragging, setDragging] = useState(false)
   const [busy, setBusy] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<MessageKey | null>(null)
   const [created, setCreated] = useState<CreatedShare | null>(null)
   const [copied, setCopied] = useState(false)
   const [remembered, setRemembered] = useState(true)
@@ -44,7 +47,7 @@ export function UploadPanel() {
 
   function addFiles(incoming: File[]) {
     if (busy) return
-    setError('')
+    setError(null)
     const next = [...files]
     for (const file of incoming) {
       if (
@@ -57,17 +60,16 @@ export function UploadPanel() {
       )
         next.push(file)
     }
-    if (next.length > 10)
-      return setError('A little less, please. You can share up to 10 files at once.')
+    if (next.length > 10) return setError('errors.tooManyFiles')
     if (next.reduce((total, file) => total + file.size, 0) > maxBytes)
-      return setError('Your files add up to more than 100 MB. Try removing a file.')
+      return setError('errors.totalSize')
     setFiles(next)
   }
 
   async function sendFiles() {
     if (!files.length || busy) return
     setBusy(true)
-    setError('')
+    setError(null)
     setProgress(0)
     const request = uploadShare(files, expiresIn, setProgress)
     upload.current = request
@@ -77,7 +79,7 @@ export function UploadPanel() {
       setCreated(result)
     } catch (error) {
       if (!(error instanceof DOMException && error.name === 'AbortError'))
-        setError(error instanceof Error ? error.message : 'The upload failed. Try again.')
+        setError(error instanceof ApiError ? error.messageKey : 'errors.upload')
     } finally {
       setBusy(false)
       upload.current = null
@@ -92,7 +94,7 @@ export function UploadPanel() {
     } catch {
       linkInput.current?.focus()
       linkInput.current?.select()
-      setError('Copy the selected link manually with Ctrl+C or Cmd+C.')
+      setError('errors.copy')
     }
   }
 
@@ -101,29 +103,34 @@ export function UploadPanel() {
     setFiles([])
     setCopied(false)
     setDeleted(false)
-    setError('')
+    setError(null)
   }
 
   if (created)
     return (
-      <section className="upload-panel success-panel" aria-label="Your share">
+      <section className="upload-panel success-panel" aria-label={t('upload.shareLabel')}>
         <div className="panel-eyebrow">
-          <span className="mono">TRANSFER COMPLETE</span>
+          <span className="mono">{t('upload.complete')}</span>
           <CheckCheck size={17} />
         </div>
         <div className="success-mark">
           <Check size={34} strokeWidth={1.5} />
         </div>
-        <h2>{deleted ? 'Gone, just like that.' : 'Ready for a short stay.'}</h2>
+        <h2>{t(deleted ? 'upload.deletedTitle' : 'upload.readyTitle')}</h2>
         <p className="panel-description">
           {deleted
-            ? 'Your files have been deleted and the link is disabled.'
-            : `${created.share.files.length} ${created.share.files.length === 1 ? 'file' : 'files'}, one link. Send it to someone good.`}
+            ? t('upload.deletedDescription')
+            : t(
+                created.share.files.length === 1
+                  ? 'upload.readyDescription.one'
+                  : 'upload.readyDescription.other',
+                { count: created.share.files.length },
+              )}
         </p>
         {!deleted && (
           <>
             <label className="mono link-label" htmlFor="share-link">
-              YOUR SHARING LINK
+              {t('upload.linkLabel')}
             </label>
             <div className="share-link">
               <Link2 size={18} />
@@ -137,28 +144,28 @@ export function UploadPanel() {
               <button
                 className="icon-button"
                 onClick={copyLink}
-                aria-label={copied ? 'Link copied' : 'Copy share link'}
+                aria-label={t(copied ? 'upload.linkCopied' : 'upload.copyLabel')}
               >
                 {copied ? <Check size={18} /> : <Copy size={18} />}
               </button>
             </div>
             <button className="primary-button" onClick={copyLink}>
-              {copied ? 'Copied. Pass it on.' : 'Copy sharing link'}
+              {t(copied ? 'upload.copied' : 'upload.copy')}
               {copied ? <Check size={19} /> : <ArrowUpRight size={19} />}
             </button>
             <p className="expiry-note">
-              Disappears{' '}
-              {new Date(created.share.expiresAt).toLocaleString('en', {
-                month: 'short',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
+              {t('upload.expiry', {
+                date: new Date(created.share.expiresAt).toLocaleString(language, {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                }),
               })}
-              . Anyone with the link can download.
             </p>
             <div className="success-bottom">
               <a className="text-button" href={`/s/${created.share.id}`}>
-                Open share <ArrowUpRight size={14} />
+                {t('upload.open')} <ArrowUpRight size={14} />
               </a>
               <DeleteShare
                 id={created.share.id}
@@ -166,36 +173,31 @@ export function UploadPanel() {
                 onDeleted={() => setDeleted(true)}
               />
             </div>
-            {!remembered && (
-              <p className="expiry-note">
-                Browser storage is unavailable. Keep this page open if you want to delete the share
-                early.
-              </p>
-            )}
+            {!remembered && <p className="expiry-note">{t('upload.storageUnavailable')}</p>}
           </>
         )}
         {error && (
           <p role="alert" className="error-message">
-            {error}
+            {t(error)}
           </p>
         )}
         <button className="text-button another-share" onClick={reset}>
-          <Plus size={16} /> Share something else
+          <Plus size={16} /> {t('upload.another')}
         </button>
       </section>
     )
 
   return (
-    <section className="upload-panel" aria-label="Create a file share">
+    <section className="upload-panel" aria-label={t('upload.createLabel')}>
       <div className="panel-eyebrow">
-        <span className="mono">A NEW TRANSFER</span>
+        <span className="mono">{t('upload.newTransfer')}</span>
         <span className="panel-number mono">/ 001</span>
       </div>
       <div className="panel-heading">
         <h2>
-          Make room for
+          {t('upload.title')}
           <br />
-          something temporary.
+          {t('upload.titleEnd')}
         </h2>
         <ArrowUpRight size={30} strokeWidth={1.2} />
       </div>
@@ -204,7 +206,7 @@ export function UploadPanel() {
         type="file"
         multiple
         hidden
-        aria-label="Choose files to share"
+        aria-label={t('upload.chooseFiles')}
         onChange={(event) => {
           addFiles(Array.from(event.target.files || []))
           event.target.value = ''
@@ -231,26 +233,24 @@ export function UploadPanel() {
           <span className="symbol-plus">+</span>
         </span>
         <span className="dropzone-title">
-          {dragging
-            ? 'Let them go right here.'
-            : files.length
-              ? 'A little something else?'
-              : 'Drop your files here'}
+          {t(dragging ? 'upload.dropDragging' : files.length ? 'upload.dropMore' : 'upload.drop')}
         </span>
         <span className="dropzone-detail">
-          or <span>browse files</span> to get started
+          {t('upload.browseStart')} <span>{t('upload.browse')}</span> {t('upload.browseEnd')}
         </span>
         <span className="dropzone-limit mono">
-          UP TO 100 MB <span>/</span> 10 FILES
+          {t('upload.limit')} <span>/</span> {t('upload.fileLimit')}
         </span>
       </button>
       {files.length > 0 && (
         <>
           <div className="file-list-label mono">
             <span>
-              {files.length} {files.length === 1 ? 'FILE' : 'FILES'} SELECTED
+              {t(files.length === 1 ? 'upload.selected.one' : 'upload.selected.other', {
+                count: files.length,
+              })}
             </span>
-            <span>{formatSize(totalBytes)} / 100 MB</span>
+            <span>{formatSize(totalBytes, language)} / 100 MB</span>
           </div>
           <ul className="file-list selected-files">
             {files.map((file, index) => (
@@ -262,10 +262,10 @@ export function UploadPanel() {
                 <button
                   disabled={busy}
                   className="icon-button"
-                  aria-label={`Remove ${file.name}`}
+                  aria-label={t('upload.remove', { name: file.name })}
                   onClick={() => {
                     setFiles(files.filter((_, position) => index !== position))
-                    setError('')
+                    setError(null)
                   }}
                 >
                   <X size={16} />
@@ -276,7 +276,7 @@ export function UploadPanel() {
         </>
       )}
       <fieldset className="expiration" disabled={busy}>
-        <legend className="mono">LET IT DISAPPEAR AFTER</legend>
+        <legend className="mono">{t('upload.expiration')}</legend>
         <div className="expiration-options">
           {expirationOptions.map((option) => (
             <label
@@ -290,7 +290,7 @@ export function UploadPanel() {
                 checked={expiresIn === option.hours}
                 onChange={() => setExpiresIn(option.hours)}
               />
-              <span>{option.label}</span>
+              <span>{t(option.label)}</span>
               {expiresIn === option.hours && <span className="selection-dot" />}
             </label>
           ))}
@@ -298,7 +298,7 @@ export function UploadPanel() {
       </fieldset>
       {error && (
         <p className="error-message" role="alert">
-          {error}
+          {t(error)}
         </p>
       )}
       {busy && (
@@ -308,10 +308,10 @@ export function UploadPanel() {
           aria-valuenow={progress}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label="Upload progress"
+          aria-label={t('upload.progress')}
         >
           <div className="progress-label mono">
-            <span>{progress === 100 ? 'FINALIZING YOUR SHARE' : 'MAKING A LITTLE SPACE'}</span>
+            <span>{t(progress === 100 ? 'upload.finalizing' : 'upload.makingSpace')}</span>
             <span>{progress}%</span>
           </div>
           <div className="progress-track">
@@ -322,23 +322,23 @@ export function UploadPanel() {
       <button className="primary-button" disabled={!files.length || busy} onClick={sendFiles}>
         {busy ? (
           <>
-            <span>{progress === 100 ? 'Almost there...' : 'Sending your files...'}</span>
+            <span>{t(progress === 100 ? 'upload.almost' : 'upload.sending')}</span>
             <LoaderCircle size={20} className="spin" />
           </>
         ) : (
           <>
-            <span>Create a sharing link</span>
+            <span>{t('upload.create')}</span>
             <ArrowRight size={20} />
           </>
         )}
       </button>
       {busy ? (
         <button className="text-button cancel-upload" onClick={() => upload.current?.cancel()}>
-          Cancel upload
+          {t('upload.cancel')}
         </button>
       ) : (
         <p className="panel-footnote">
-          <ShieldCheck size={14} /> Private storage. Automatic cleanup.
+          <ShieldCheck size={14} /> {t('upload.privacy')}
         </p>
       )}
     </section>

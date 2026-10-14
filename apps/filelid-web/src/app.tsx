@@ -6,14 +6,17 @@ import {
   Feather,
   FileImage,
   FileText,
+  Languages,
   Link2,
   Orbit,
   Upload,
 } from 'lucide-react'
 import { UploadPanel } from './components/upload-panel'
 import { SharePage } from './pages/share-page'
+import { useLanguage } from './lib/i18n'
 
 export function App() {
+  const { language, setLanguage, t } = useLanguage()
   const path = window.location.pathname
   const shareRoute = path.match(
     /^\/s\/([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\/?$/i,
@@ -23,7 +26,7 @@ export function App() {
   return (
     <div className="site-shell">
       <header className="site-header">
-        <a href="/" className="brand" aria-label="Filelid home">
+        <a href="/" className="brand" aria-label={t('header.home')}>
           <span className="brand-symbol">
             <Orbit size={29} strokeWidth={1.7} />
           </span>
@@ -32,11 +35,11 @@ export function App() {
         <div className="header-right">
           {home && (
             <a href="#how-it-works" className="header-link">
-              The short version <ArrowDown size={13} />
+              {t('header.shortVersion')} <ArrowDown size={13} />
             </a>
           )}
           <span className="header-note mono">
-            <span className="live-dot" /> NO SIGN-UP. JUST SEND.
+            <span className="live-dot" /> {t('header.note')}
           </span>
         </div>
       </header>
@@ -46,105 +49,105 @@ export function App() {
           <section className="hero">
             <div className="hero-copy">
               <div className="hero-eyebrow mono">
-                <span className="eyebrow-line" /> A LITTLE SPACE. A SHORT STAY.
+                <span className="eyebrow-line" /> {t('hero.eyebrow')}
               </div>
               <h1>
-                Files for now.
+                {t('hero.title')}
                 <br />
-                <em>Not forever.</em>
+                <em>{t('hero.titleEmphasis')}</em>
                 <span className="headline-dot">*</span>
               </h1>
               <p className="hero-description">
-                Some things don&apos;t need a permanent address.
+                {t('hero.description')}
                 <br />
-                Drop your files, share a link, and let time
-                <br className="desktop-break" /> take care of the rest.
+                {t('hero.descriptionStart')}
+                <br className="desktop-break" /> {t('hero.descriptionEnd')}
               </p>
               <div className="hero-details">
                 <span>
-                  <Feather size={16} /> Light on commitment.
+                  <Feather size={16} /> {t('hero.light')}
                 </span>
                 <span>
-                  <Clock3 size={16} /> Gone on schedule.
+                  <Clock3 size={16} /> {t('hero.scheduled')}
                 </span>
               </div>
               <div className="file-art" aria-hidden="true">
                 <div className="art-orbit" />
                 <div className="art-file art-file-back">
                   <FileText size={30} strokeWidth={1} />
-                  <span className="mono">notes.pdf</span>
+                  <span className="mono">{t('hero.exampleDocument')}</span>
                 </div>
                 <div className="art-file art-file-front">
                   <FileImage size={32} strokeWidth={1} />
-                  <span className="mono">a-good-day.jpg</span>
+                  <span className="mono">{t('hero.exampleImage')}</span>
                   <span className="art-file-dot" />
                 </div>
                 <span className="art-label mono">
-                  HERE TODAY.
+                  {t('hero.artToday')}
                   <br />
-                  GONE WHEN YOU SAY.
+                  {t('hero.artGone')}
                 </span>
                 <CornerDownRight className="art-arrow" size={30} strokeWidth={1} />
               </div>
               <div className="hero-postscript mono">
-                <span>*</span> BIG IDEAS. SMALL FOOTPRINT.
+                <span>*</span> {t('hero.postscript')}
               </div>
             </div>
             <div className="hero-upload">
               <div className="upload-top-note mono">
-                <span>LESS FRICTION. MORE SHARING.</span>
-                <span>EST. NOW</span>
+                <span>{t('hero.uploadNote')}</span>
+                <span>{t('hero.established')}</span>
               </div>
               <UploadPanel />
               <p className="upload-below-note">
-                For the drafts, the moments, the <em>just-for-nows.</em>
+                {t('hero.belowNote')} <em>{t('hero.belowEmphasis')}</em>
               </p>
             </div>
           </section>
 
-          <section className="how-it-works" id="how-it-works" aria-label="How Filelid works">
+          <section className="how-it-works" id="how-it-works" aria-label={t('how.label')}>
             <div className="how-heading">
-              <span className="mono">THE SHORT VERSION</span>
+              <span className="mono">{t('how.shortVersion')}</span>
               <p>
-                A send-off.
+                {t('how.title')}
                 <br />
-                <em>Not a storage plan.</em>
+                <em>{t('how.titleEmphasis')}</em>
               </p>
             </div>
             <article className="how-step">
               <div className="how-step-top">
-                <span className="mono">01 / DROP</span>
+                <span className="mono">{t('how.drop')}</span>
                 <Upload size={19} strokeWidth={1.3} />
               </div>
-              <h3>A little of anything.</h3>
+              <h3>{t('how.dropTitle')}</h3>
               <p>
-                Up to 10 files, 100 MB total.
+                {t('how.dropLimit')}
                 <br />
-                No accounts. No extra steps.
+                {t('how.dropDescription')}
               </p>
             </article>
             <article className="how-step">
               <div className="how-step-top">
-                <span className="mono">02 / SHARE</span>
+                <span className="mono">{t('how.share')}</span>
                 <Link2 size={19} strokeWidth={1.3} />
               </div>
-              <h3>One link does it.</h3>
+              <h3>{t('how.shareTitle')}</h3>
               <p>
-                Copy it. Send it. Anyone with
+                {t('how.shareStart')}
                 <br />
-                the link can get your files.
+                {t('how.shareEnd')}
               </p>
             </article>
             <article className="how-step">
               <div className="how-step-top">
-                <span className="mono">03 / DISAPPEAR</span>
+                <span className="mono">{t('how.disappear')}</span>
                 <Clock3 size={19} strokeWidth={1.3} />
               </div>
-              <h3>Time takes care of it.</h3>
+              <h3>{t('how.disappearTitle')}</h3>
               <p>
-                Choose 1 hour, 24 hours, or 7 days.
+                {t('how.disappearOptions')}
                 <br />
-                We handle the cleanup.
+                {t('how.disappearDescription')}
               </p>
             </article>
           </section>
@@ -155,22 +158,42 @@ export function App() {
         <main className="share-page">
           <div className="share-card empty-card">
             <h1>
-              A wrong
+              {t('notFound.title')}
               <br />
-              <em>turn.</em>
+              <em>{t('notFound.titleEmphasis')}</em>
             </h1>
-            <p>There&apos;s nothing at this address.</p>
+            <p>{t('notFound.description')}</p>
             <a href="/" className="primary-button">
-              Back to Filelid <ArrowUpRight size={18} />
+              {t('common.back')} <ArrowUpRight size={18} />
             </a>
           </div>
         </main>
       )}
 
       <footer className="site-footer">
-        <span className="mono">FILELID / LESS TO HOLD ON TO.</span>
-        <span>
-          Made for passing things along.<span className="footer-spark">*</span>
+        <span className="mono">{t('footer.tagline')}</span>
+        <label className="language-selector" htmlFor="language">
+          <Languages size={15} aria-hidden="true" />
+          <span className="mono">{t('footer.language')}</span>
+          <select
+            id="language"
+            value={language}
+            onChange={(event) => {
+              const next = event.target.value
+              if (next === 'en' || next === 'pt-BR') setLanguage(next)
+            }}
+          >
+            <option value="en" lang="en">
+              {t('language.en')}
+            </option>
+            <option value="pt-BR" lang="pt-BR">
+              {t('language.ptBR')}
+            </option>
+          </select>
+        </label>
+        <span className="footer-note">
+          {t('footer.note')}
+          <span className="footer-spark">*</span>
         </span>
       </footer>
     </div>
