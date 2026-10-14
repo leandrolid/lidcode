@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import {
   ArrowRight,
   ArrowUpRight,
@@ -164,9 +165,9 @@ export function UploadPanel() {
               })}
             </p>
             <div className="success-bottom">
-              <a className="text-button" href={`/s/${created.share.id}`}>
+              <Link className="text-button" to="/s/$id" params={{ id: created.share.id }}>
                 {t('upload.open')} <ArrowUpRight size={14} />
-              </a>
+              </Link>
               <DeleteShare
                 id={created.share.id}
                 token={created.managementToken}

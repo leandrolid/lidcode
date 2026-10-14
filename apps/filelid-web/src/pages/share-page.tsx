@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -72,9 +73,9 @@ export function SharePage({ id }: { id: string }) {
             <em>{t('share.goneEmphasis')}</em>
           </h1>
           <p>{t('share.goneDescription')}</p>
-          <a className="primary-button" href="/">
+          <Link className="primary-button" to="/">
             {t('share.new')} <ArrowUpRight size={19} />
-          </a>
+          </Link>
         </div>
       </main>
     )
@@ -98,9 +99,9 @@ export function SharePage({ id }: { id: string }) {
   const total = share.files.reduce((sum, file) => sum + file.size, 0)
   return (
     <main className="share-page">
-      <a className="back-link mono" href="/">
+      <Link className="back-link mono" to="/">
         <ArrowLeft size={15} /> {t('share.back')}
-      </a>
+      </Link>
       <section className="share-card">
         <div className="panel-eyebrow">
           <span className="mono">{t('share.delivery')}</span>
@@ -167,9 +168,9 @@ export function SharePage({ id }: { id: string }) {
       </section>
       <p className="share-outro">
         {t('share.outro')}{' '}
-        <a href="/">
+        <Link to="/">
           {t('share.outroLink')} <ArrowUpRight size={14} />
-        </a>
+        </Link>
       </p>
     </main>
   )
