@@ -18,7 +18,10 @@ async function main() {
       bodyLimit: MAX_SHARE_BYTES + 1024 * 1024,
     }),
   )
-  app.enableCors({ origin: env.FILELID_CORS_ORIGINS })
+  app.enableCors({
+    origin: env.FILELID_CORS_ORIGINS,
+    methods: ['GET', 'HEAD', 'POST', 'DELETE', 'OPTIONS'],
+  })
   app.enableShutdownHooks()
   await app.register(multipart, {
     throwFileSizeLimit: false,
