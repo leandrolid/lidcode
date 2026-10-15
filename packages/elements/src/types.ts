@@ -9,10 +9,13 @@ export type LidcodeGithubLinkAttributes = {
   title?: string
   'aria-label'?: string
   size?: number | string
+  variant?: string
 }
 
 export type LidcodeBadgeAttributes = {
   text?: string
+  variant?: string
+  size?: string
 }
 
 export type LidcodeMadeByAttributes = {

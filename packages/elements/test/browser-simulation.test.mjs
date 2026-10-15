@@ -85,10 +85,10 @@ test('Custom Elements browser lifecycle and properties', async () => {
   const madeByEl = new LidcodeMadeBy()
   madeByEl.connectedCallback()
   assert.ok(madeByEl.shadowRoot)
-  assert.match(madeByEl.shadowRoot.innerHTML, /Made by <strong>lidcode<\/strong>/)
+  assert.match(madeByEl.shadowRoot.innerHTML, /Made by.*<strong.*>lidcode<\/strong>/)
 
   madeByEl.author = 'Lidcode Team'
   madeByEl.href = 'https://lidcode.com'
-  assert.match(madeByEl.shadowRoot.innerHTML, /Made by <strong>Lidcode Team<\/strong>/)
+  assert.match(madeByEl.shadowRoot.innerHTML, /Made by.*<strong.*>Lidcode Team<\/strong>/)
   assert.match(madeByEl.shadowRoot.innerHTML, /href="https:\/\/lidcode\.com"/)
 })

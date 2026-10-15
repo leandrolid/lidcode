@@ -9,7 +9,7 @@ const DEFAULT_REL = 'noopener noreferrer'
 const DEFAULT_SIZE = 19
 
 export class LidcodeGithubLink extends SafeHTMLElement {
-  static observedAttributes = ['href', 'target', 'rel', 'title', 'aria-label', 'size']
+  static observedAttributes = ['href', 'target', 'rel', 'title', 'aria-label', 'size', 'variant', 'box-size']
 
   connectedCallback(): void {
     this.render()
@@ -72,6 +72,30 @@ export class LidcodeGithubLink extends SafeHTMLElement {
     this.setAttribute('size', String(value))
   }
 
+  get variant(): string | null {
+    return this.getAttribute('variant')
+  }
+
+  set variant(value: string | null) {
+    if (value === null) {
+      this.removeAttribute('variant')
+    } else {
+      this.setAttribute('variant', value)
+    }
+  }
+
+  get boxSize(): string | null {
+    return this.getAttribute('box-size')
+  }
+
+  set boxSize(value: string | null) {
+    if (value === null) {
+      this.removeAttribute('box-size')
+    } else {
+      this.setAttribute('box-size', value)
+    }
+  }
+
   private render(): void {
     const shadow = this.shadowRoot ?? this.attachShadow({ mode: 'open' })
     const href = this.href
@@ -84,28 +108,59 @@ export class LidcodeGithubLink extends SafeHTMLElement {
     shadow.innerHTML = `
       <style>
         :host {
-          display: inline-block;
-          vertical-align: middle;
-        }
-        .github-link {
-          display: grid;
+          display: inline-grid;
           place-items: center;
           width: var(--lidcode-github-size, 40px);
           height: var(--lidcode-github-size, 40px);
           border-radius: var(--lidcode-github-radius, 8px);
-          color: var(--lidcode-github-color, var(--muted-foreground, inherit));
+          vertical-align: middle;
+          box-sizing: border-box;
+          border: none !important;
+          padding: 0 !important;
+        }
+        :host([hidden]) {
+          display: none !important;
+        }
+        :host([variant="ghost"]),
+        :host([box-size="auto"]),
+        :host([box-size="none"]) {
+          width: auto;
+          height: auto;
+        }
+        :host([box-size="sm"]) {
+          width: 32px;
+          height: 32px;
+        }
+        :host([box-size="lg"]) {
+          width: 48px;
+          height: 48px;
+        }
+        a {
+          display: grid;
+          place-items: center;
+          width: 100%;
+          height: 100%;
+          border-radius: inherit;
+          color: var(--lidcode-github-color, var(--lidcode-muted, var(--muted-foreground, var(--muted, inherit))));
           background: var(--lidcode-github-bg, transparent);
           text-decoration: none;
-          transition: color 0.15s ease, background-color 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
           box-sizing: border-box;
         }
-        .github-link:hover {
-          color: var(--lidcode-github-hover-color, var(--primary, #6366f1));
+        :host(:hover) a,
+        a:hover {
+          color: var(--lidcode-github-hover-color, var(--lidcode-primary, var(--lidcode-accent, var(--primary, var(--accent, #6366f1)))));
           background: var(--lidcode-github-hover-bg, transparent);
         }
-        .github-link:focus-visible {
-          outline: 2px solid var(--lidcode-focus-color, var(--primary, #6366f1));
+        a:focus-visible {
+          outline: 2px solid var(--lidcode-focus-color, var(--lidcode-primary, var(--lidcode-accent, var(--ring, var(--accent, #6366f1)))));
           outline-offset: 2px;
+        }
+        :host([variant="outline"]) a {
+          border: 1px solid var(--lidcode-border, var(--border, var(--line, rgba(255, 255, 255, 0.15))));
+        }
+        :host([variant="outline"]:hover) a {
+          border-color: var(--lidcode-github-hover-color, var(--lidcode-primary, var(--lidcode-accent, var(--primary, var(--accent, #6366f1)))));
         }
         svg {
           display: block;
@@ -114,6 +169,7 @@ export class LidcodeGithubLink extends SafeHTMLElement {
         }
       </style>
       <a
+        part="link"
         class="github-link"
         href="${escapeAttr(href)}"
         target="${escapeAttr(target)}"
@@ -122,6 +178,7 @@ export class LidcodeGithubLink extends SafeHTMLElement {
         aria-label="${escapeAttr(ariaLabel)}"
       >
         <svg
+          part="icon"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"

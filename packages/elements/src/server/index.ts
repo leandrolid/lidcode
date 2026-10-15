@@ -40,29 +40,29 @@ export const ELEMENTS_STATIC_CSS = `
 .github-link {
   display: inline-grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  color: var(--muted-foreground, inherit);
+  width: var(--lidcode-github-size, 40px);
+  height: var(--lidcode-github-size, 40px);
+  border-radius: var(--lidcode-github-radius, 8px);
+  color: var(--lidcode-github-color, var(--lidcode-muted, var(--muted-foreground, var(--muted, inherit))));
   text-decoration: none;
   transition: color 0.15s ease;
   vertical-align: middle;
 }
 .lidcode-github-link:hover,
 .github-link:hover {
-  color: var(--primary, #6366f1);
+  color: var(--lidcode-github-hover-color, var(--lidcode-primary, var(--lidcode-accent, var(--primary, var(--accent, #6366f1)))));
 }
 .lidcode-badge,
 .header-tag.mono {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 9px 12px;
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
-  border-radius: 5px;
-  color: var(--muted-foreground, #a1a1aa);
-  font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
-  font-size: 10px;
+  padding: var(--lidcode-badge-padding, 9px 12px);
+  border: var(--lidcode-badge-border, 1px solid var(--lidcode-border, var(--border, var(--line, rgba(255, 255, 255, 0.15)))));
+  border-radius: var(--lidcode-badge-radius, 5px);
+  color: var(--lidcode-badge-color, var(--lidcode-muted, var(--muted-foreground, var(--muted, inherit))));
+  font-family: var(--lidcode-mono, var(--mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace));
+  font-size: var(--lidcode-badge-font-size, 10px);
   font-weight: 400;
   letter-spacing: 0.065em;
   text-transform: uppercase;
@@ -74,21 +74,21 @@ export const ELEMENTS_STATIC_CSS = `
 .made-by-link {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  color: var(--muted-foreground, #a1a1aa);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 11px;
+  gap: var(--lidcode-made-by-gap, 4px);
+  color: var(--lidcode-made-by-color, var(--lidcode-muted, var(--muted-foreground, var(--muted, inherit))));
+  font-family: var(--lidcode-font, inherit);
+  font-size: var(--lidcode-made-by-font-size, 11px);
   text-decoration: none;
   transition: color 0.15s ease;
   vertical-align: middle;
 }
 .lidcode-made-by:hover,
 .made-by-link:hover {
-  color: var(--primary, #6366f1);
+  color: var(--lidcode-made-by-hover-color, var(--lidcode-primary, var(--lidcode-accent, var(--primary, var(--accent, #6366f1)))));
 }
 .lidcode-made-by strong,
 .made-by-link strong {
-  color: var(--foreground, #ffffff);
+  color: var(--lidcode-made-by-strong-color, var(--lidcode-foreground, var(--foreground, var(--text, currentColor))));
   font-weight: 700;
 }
 .lidcode-made-by svg,
@@ -119,7 +119,8 @@ export function renderGithubLink(options: RenderGithubLinkOptions = {}): string 
   const size = options.size ?? 19
 
   if (options.asElement) {
-    return `<lidcode-github-link href="${escapeAttr(href)}" target="${escapeAttr(target)}" rel="${escapeAttr(rel)}" title="${escapeAttr(title)}" aria-label="${escapeAttr(ariaLabel)}" size="${escapeAttr(String(size))}"></lidcode-github-link>`
+    const classAttr = options.className ? ` class="${escapeAttr(options.className)}"` : ''
+    return `<lidcode-github-link${classAttr} href="${escapeAttr(href)}" target="${escapeAttr(target)}" rel="${escapeAttr(rel)}" title="${escapeAttr(title)}" aria-label="${escapeAttr(ariaLabel)}" size="${escapeAttr(String(size))}"></lidcode-github-link>`
   }
 
   const className = options.className ? `github-link ${options.className}` : 'github-link'
@@ -131,7 +132,8 @@ export function renderBadge(options: RenderBadgeOptions = {}): string {
   const text = options.text ?? 'A lidcode tool'
 
   if (options.asElement) {
-    return `<lidcode-badge text="${escapeAttr(text)}"></lidcode-badge>`
+    const classAttr = options.className ? ` class="${escapeAttr(options.className)}"` : ''
+    return `<lidcode-badge${classAttr} text="${escapeAttr(text)}"></lidcode-badge>`
   }
 
   const className = options.className ? `header-tag mono ${options.className}` : 'header-tag mono'
@@ -148,7 +150,8 @@ export function renderMadeBy(options: RenderMadeByOptions = {}): string {
   const srText = options.srText ?? '(opens in a new tab)'
 
   if (options.asElement) {
-    return `<lidcode-made-by href="${escapeAttr(href)}" author="${escapeAttr(author)}" prefix="${escapeAttr(prefix)}" target="${escapeAttr(target)}" rel="${escapeAttr(rel)}" sr-text="${escapeAttr(srText)}"></lidcode-made-by>`
+    const classAttr = options.className ? ` class="${escapeAttr(options.className)}"` : ''
+    return `<lidcode-made-by${classAttr} href="${escapeAttr(href)}" author="${escapeAttr(author)}" prefix="${escapeAttr(prefix)}" target="${escapeAttr(target)}" rel="${escapeAttr(rel)}" sr-text="${escapeAttr(srText)}"></lidcode-made-by>`
   }
 
   const className = options.className ? `made-by-link ${options.className}` : 'made-by-link'
