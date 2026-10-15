@@ -1,7 +1,8 @@
+import '@lidcode/elements'
 import { createRootRoute, Link, Outlet, useLocation } from '@tanstack/react-router'
 import { ArrowDown, Languages, Orbit } from 'lucide-react'
-import { NotFoundPage } from '../pages/not-found-page'
 import { useLanguage } from '../lib/i18n'
+import { NotFoundPage } from '../pages/not-found-page'
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -31,6 +32,8 @@ function RootLayout() {
           <span className="header-note mono">
             <span className="live-dot" /> {t('header.note')}
           </span>
+          <lidcode-github-link class="header-github" />
+          <lidcode-badge class="header-badge" />
         </div>
       </header>
 
@@ -57,10 +60,7 @@ function RootLayout() {
             </option>
           </select>
         </label>
-        <span className="footer-note">
-          {t('footer.note')}
-          <span className="footer-spark">*</span>
-        </span>
+        <lidcode-made-by class="footer-made-by" />
       </footer>
     </div>
   )

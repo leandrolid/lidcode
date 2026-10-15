@@ -114,7 +114,7 @@ button {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 38px;
+  gap: 24px;
 }
 .header-link {
   display: flex;
@@ -1194,7 +1194,8 @@ button {
   .brand-symbol > svg {
     width: 25px;
   }
-  .header-link {
+  .header-link,
+  .header-badge {
     display: none;
   }
   .header-note {
