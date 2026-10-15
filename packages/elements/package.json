@@ -1,0 +1,37 @@
+{
+  "name": "@lidcode/elements",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
+    },
+    "./bundle": {
+      "default": "./dist/bundle.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b && node scripts/bundle.mjs",
+    "lint": "eslint .",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "@lidcode/eslint": "^0.5.5",
+    "@lidcode/prettier": "^0.5.6",
+    "@lidcode/tsconfig": "^0.5.6",
+    "esbuild": "^0.25.0 || ^0.27.0",
+    "typescript": "5.8.2"
+  },
+  "prettier": "@lidcode/prettier"
+}

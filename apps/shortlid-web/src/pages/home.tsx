@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import type { FormEvent } from "react";
+import { ConfirmDeleteDialog } from "@/components/dialogs/confirm-delete";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ConfirmDeleteDialog } from "@/components/dialogs/confirm-delete";
 import { useStorage } from "@/hooks/use-storage";
 import { cn } from "@/lib/utils";
-import { createShortUrl, type CreateShortUrlResponse } from "@/services/urls/create-short-url";
-import { toast } from "sonner";
+import {
+  createShortUrl,
+  type CreateShortUrlResponse,
+} from "@/services/urls/create-short-url";
+import "@lidcode/elements";
 import {
   ArrowDown,
   ArrowDownRight,
@@ -15,7 +16,6 @@ import {
   Check,
   Clock3,
   Copy,
-  Github,
   Link2,
   LoaderCircle,
   LockKeyhole,
@@ -26,6 +26,9 @@ import {
   Zap,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type ButtonState = "idle" | "loading" | "success" | "error";
 
@@ -42,7 +45,9 @@ export function Home() {
   const [url, setUrl] = useState("");
   const [buttonState, setButtonState] = useState<ButtonState>("idle");
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [shortenedUrls, setShortenedUrls] = useStorage<CreateShortUrlResponse[]>("urls", []);
+  const [shortenedUrls, setShortenedUrls] = useStorage<
+    CreateShortUrlResponse[]
+  >("urls", []);
   const [newlyAddedUrl, setNewlyAddedUrl] = useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
@@ -93,7 +98,9 @@ export function Home() {
       setCopiedUrl(text);
       toast.success("Link copied. Pass it on!");
     } catch {
-      toast.error("Couldn't copy the link. You can select and copy it manually.");
+      toast.error(
+        "Couldn't copy the link. You can select and copy it manually.",
+      );
     }
   };
 
@@ -126,17 +133,8 @@ export function Home() {
           >
             {isDark ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
           </Button>
-          <a
-            className="github-link"
-            href="https://github.com/leandrolid/lidcode"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="View Lidcode on GitHub (opens in a new tab)"
-            title="View on GitHub"
-          >
-            <Github size={19} strokeWidth={1.7} />
-          </a>
-          <span className="header-tag mono">A lidcode tool</span>
+          <lidcode-github-link class="github-link" />
+          <lidcode-badge class="header-tag" />
         </nav>
       </header>
 
@@ -144,7 +142,8 @@ export function Home() {
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-copy">
             <p className="eyebrow mono">
-              <span className="eyebrow-dot" aria-hidden="true" />A little link goes a long way
+              <span className="eyebrow-dot" aria-hidden="true" />A little link
+              goes a long way
             </p>
             <h1 id="hero-title">
               Less link.
@@ -152,8 +151,8 @@ export function Home() {
               <span>More impact.</span>
             </h1>
             <p className="hero-description">
-              Big ideas don&apos;t need long URLs. Turn your link into something short, tidy, and
-              ready to go places.
+              Big ideas don&apos;t need long URLs. Turn your link into something
+              short, tidy, and ready to go places.
             </p>
             <div className="hero-details">
               <span>
@@ -167,7 +166,9 @@ export function Home() {
 
           <div className="link-art" aria-hidden="true">
             <div className="art-grid" />
-            <span className="art-caption mono">Same destination. Less baggage.</span>
+            <span className="art-caption mono">
+              Same destination. Less baggage.
+            </span>
             <svg className="link-sculpture" viewBox="0 0 440 340" fill="none">
               <g transform="rotate(-36 220 170)">
                 <rect
@@ -189,7 +190,11 @@ export function Home() {
                   strokeWidth="32"
                 />
                 {/* Redraw this arc so the background link passes over the upper crossing. */}
-                <path d="M217 90a56 56 0 0 1 0 112" stroke="var(--link-ink)" strokeWidth="32" />
+                <path
+                  d="M217 90a56 56 0 0 1 0 112"
+                  stroke="var(--link-ink)"
+                  strokeWidth="32"
+                />
               </g>
               <path
                 d="M356 58v26m-13-13h26M74 260v18m-9-9h18"
@@ -214,7 +219,11 @@ export function Home() {
           </div>
         </section>
 
-        <section className="shortener-panel" id="shorten" aria-labelledby="shortener-title">
+        <section
+          className="shortener-panel"
+          id="shorten"
+          aria-labelledby="shortener-title"
+        >
           <div className="panel-heading">
             <div className="section-title">
               <span className="section-index mono" aria-hidden="true">
@@ -231,7 +240,11 @@ export function Home() {
             </label>
             <div className="shortener-fields">
               <div className="url-field">
-                <Link2 size={21} className="url-field-icon" aria-hidden="true" />
+                <Link2
+                  size={21}
+                  className="url-field-icon"
+                  aria-hidden="true"
+                />
                 <Input
                   id="original-url"
                   name="originalUrl"
@@ -245,7 +258,9 @@ export function Home() {
                   value={url}
                   disabled={buttonState === "loading"}
                   aria-describedby={
-                    submitError ? "shortener-error shortener-note" : "shortener-note"
+                    submitError
+                      ? "shortener-error shortener-note"
+                      : "shortener-note"
                   }
                   aria-invalid={Boolean(submitError)}
                   onChange={(event) => {
@@ -279,13 +294,18 @@ export function Home() {
                 <Clock3 size={14} aria-hidden="true" /> Links last for 30 days
               </span>
               <span>
-                <LockKeyhole size={14} aria-hidden="true" /> History saved in this browser
+                <LockKeyhole size={14} aria-hidden="true" /> History saved in
+                this browser
               </span>
             </div>
           </form>
         </section>
 
-        <section className="collection" id="your-links" aria-labelledby="collection-title">
+        <section
+          className="collection"
+          id="your-links"
+          aria-labelledby="collection-title"
+        >
           <div className="collection-heading">
             <div>
               <div className="section-title">
@@ -331,7 +351,9 @@ export function Home() {
                 return (
                   <li
                     key={`${item.shortUrl}-${index}`}
-                    className={cn("link-row", { "is-new": newlyAddedUrl === item.shortUrl })}
+                    className={cn("link-row", {
+                      "is-new": newlyAddedUrl === item.shortUrl,
+                    })}
                   >
                     <span className="link-number mono" aria-hidden="true">
                       {(index + 1).toString().padStart(2, "0")}
@@ -359,14 +381,20 @@ export function Home() {
                         onClick={() => copyToClipboard(item.shortUrl)}
                         aria-label={`${isCopied ? "Copied" : "Copy"} ${item.shortUrl}`}
                       >
-                        {isCopied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                        {isCopied ? (
+                          <Check aria-hidden="true" />
+                        ) : (
+                          <Copy aria-hidden="true" />
+                        )}
                         <span>{isCopied ? "Copied" : "Copy link"}</span>
                       </Button>
                       <ConfirmDeleteDialog
                         description="This removes the link from this browser's history. The short URL will still work until it expires."
                         onConfirm={() => {
                           setShortenedUrls((previous) =>
-                            previous.filter((_, itemIndex) => itemIndex !== index),
+                            previous.filter(
+                              (_, itemIndex) => itemIndex !== index,
+                            ),
                           );
                           toast.success("Link removed from your collection.");
                         }}
@@ -390,7 +418,8 @@ export function Home() {
 
           <div className="collection-footer mono">
             <span>
-              <span className="tiny-dot" aria-hidden="true" /> Small by design. Shareable by nature.
+              <span className="tiny-dot" aria-hidden="true" /> Small by design.
+              Shareable by nature.
             </span>
             <ArrowRight size={16} aria-hidden="true" />
           </div>
@@ -401,10 +430,7 @@ export function Home() {
         <p>
           A shorter way to get there<span>.</span>
         </p>
-        <a href="https://lidco.de" target="_blank" rel="noopener noreferrer">
-          Made by <strong>lidcode</strong> <ArrowUpRight size={14} aria-hidden="true" />
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
+        <lidcode-made-by />
       </footer>
     </div>
   );
