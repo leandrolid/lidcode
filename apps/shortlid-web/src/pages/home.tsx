@@ -1,211 +1,410 @@
-import { Fragment, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useStorage } from "@/hooks/use-storage";
-import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
-import map from "/map.svg";
-import { LoaderCircleIcon, SendIcon, Trash, Check, X } from "lucide-react";
-import {
-  createShortUrl,
-  type CreateShortUrlResponse,
-} from "@/services/urls/create-short-url";
 import { ConfirmDeleteDialog } from "@/components/dialogs/confirm-delete";
-import { motion, AnimatePresence } from "framer-motion";
+import { useStorage } from "@/hooks/use-storage";
 import { cn } from "@/lib/utils";
+import { createShortUrl, type CreateShortUrlResponse } from "@/services/urls/create-short-url";
+import { toast } from "sonner";
+import {
+  ArrowDown,
+  ArrowDownRight,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Clock3,
+  Copy,
+  Github,
+  Link2,
+  LoaderCircle,
+  LockKeyhole,
+  Moon,
+  Sun,
+  Trash2,
+  X,
+  Zap,
+} from "lucide-react";
+import { useTheme } from "next-themes";
 
 type ButtonState = "idle" | "loading" | "success" | "error";
 
+const buttonLabels: Record<ButtonState, string> = {
+  idle: "Shorten link",
+  loading: "Shortening...",
+  success: "Link created",
+  error: "Try again",
+};
+
 export function Home() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const [url, setUrl] = useState("");
   const [buttonState, setButtonState] = useState<ButtonState>("idle");
-  const [shortenedUrls, setShortenedUrls] = useStorage<
-    CreateShortUrlResponse[]
-  >("urls", []);
-  const [newlyAddedIndex, setNewlyAddedIndex] = useState<number | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [shortenedUrls, setShortenedUrls] = useStorage<CreateShortUrlResponse[]>("urls", []);
+  const [newlyAddedUrl, setNewlyAddedUrl] = useState<string | null>(null);
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (buttonState !== "success" && buttonState !== "error") return;
+
+    const timeout = window.setTimeout(() => {
+      setButtonState("idle");
+      setNewlyAddedUrl(null);
+    }, 2500);
+
+    return () => window.clearTimeout(timeout);
+  }, [buttonState]);
+
+  useEffect(() => {
+    if (!copiedUrl) return;
+
+    const timeout = window.setTimeout(() => setCopiedUrl(null), 2000);
+    return () => window.clearTimeout(timeout);
+  }, [copiedUrl]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (buttonState === "loading") return;
-    if (!url) {
-      toast.error("Please enter a valid URL");
-      return;
-    }
+
+    setSubmitError(null);
     setButtonState("loading");
-    const [response, error] = await createShortUrl(url);
+    const [response, error] = await createShortUrl(url.trim());
+
     if (error) {
-      console.error(error);
-      toast.error("Failed to shorten URL. Please try again.");
+      const message = "Couldn't shorten that link. Please try again.";
+      setSubmitError(message);
       setButtonState("error");
-      setTimeout(() => setButtonState("idle"), 2000);
+      toast.error(message);
       return;
     }
-    setShortenedUrls((prev) => {
-      const newList = [response, ...prev];
-      setNewlyAddedIndex(0);
-      setTimeout(() => setNewlyAddedIndex(null), 2000);
-      return newList;
-    });
+
+    setShortenedUrls((previous) => [response, ...previous]);
+    setNewlyAddedUrl(response.shortUrl);
     setUrl("");
     setButtonState("success");
-    setTimeout(() => setButtonState("idle"), 2000);
+    toast.success("Your short link is ready to share.");
   };
 
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success("Copied to clipboard!");
-    } catch (err) {
-      console.error("Failed to copy to clipboard:", err);
+      setCopiedUrl(text);
+      toast.success("Link copied. Pass it on!");
+    } catch {
+      toast.error("Couldn't copy the link. You can select and copy it manually.");
     }
   };
 
   return (
-    <div
-      className="w-full min-h-screen flex flex-col items-center justify-center px-4 bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url('${map}')`,
-      }}
-    >
-      <div className="space-y-6 w-full max-w-3xl p-6">
-        <h2 className="text-2xl font-bold text-center">Shorten Your URL</h2>
-        <h3 className="text-center text-gray-400">
-          Enter a URL below to generate a shortened link.
-        </h3>
+    <div className="shortlid-app" id="top">
+      <a className="skip-link" href="#shorten">
+        Skip to URL shortener
+      </a>
 
-        <Card className="w-full p-8">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="w-full flex gap-2">
-              <Input
-                type="url"
-                placeholder="Enter your URL here..."
-                required
-                className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
+      <header className="site-header page-width">
+        <a className="brand" href="#top" aria-label="Shortlid home">
+          <span className="brand-mark" aria-hidden="true">
+            <Link2 size={23} strokeWidth={2.5} />
+          </span>
+          shortlid<span className="brand-period">.</span>
+        </a>
+
+        <nav className="header-nav" aria-label="Main navigation">
+          <a className="collection-nav" href="#your-links">
+            Your links <ArrowDown size={14} aria-hidden="true" />
+          </a>
+          <span className="header-divider" aria-hidden="true" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="theme-toggle"
+            aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+            title={`Switch to ${isDark ? "light" : "dark"} mode`}
+            onClick={() => setTheme(isDark ? "light" : "dark")}
+          >
+            {isDark ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+          </Button>
+          <a
+            className="github-link"
+            href="https://github.com/leandrolid/lidcode"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Lidcode on GitHub (opens in a new tab)"
+            title="View on GitHub"
+          >
+            <Github size={19} strokeWidth={1.7} />
+          </a>
+          <span className="header-tag mono">A lidcode tool</span>
+        </nav>
+      </header>
+
+      <main className="page-width">
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <p className="eyebrow mono">
+              <span className="eyebrow-dot" aria-hidden="true" />A little link goes a long way
+            </p>
+            <h1 id="hero-title">
+              Less link.
+              <br />
+              <span>More impact.</span>
+            </h1>
+            <p className="hero-description">
+              Big ideas don&apos;t need long URLs. Turn your link into something short, tidy, and
+              ready to go places.
+            </p>
+            <div className="hero-details">
+              <span>
+                <Zap size={15} aria-hidden="true" />
+                Free to use
+              </span>
+              <span className="detail-dot" aria-hidden="true" />
+              <span>No account needed</span>
+            </div>
+          </div>
+
+          <div className="link-art" aria-hidden="true">
+            <div className="art-grid" />
+            <span className="art-caption mono">Same destination. Less baggage.</span>
+            <svg className="link-sculpture" viewBox="0 0 440 340" fill="none">
+              <g transform="rotate(-36 220 170)">
+                <rect
+                  x="63"
+                  y="90"
+                  width="210"
+                  height="112"
+                  rx="56"
+                  stroke="var(--link-ink)"
+                  strokeWidth="32"
+                />
+                <rect
+                  x="167"
+                  y="140"
+                  width="210"
+                  height="112"
+                  rx="56"
+                  stroke="var(--primary)"
+                  strokeWidth="32"
+                />
+                <path d="M178 90h39a56 56 0 0 1 53 38" stroke="var(--link-ink)" strokeWidth="32" />
+              </g>
+              <path
+                d="M356 58v26m-13-13h26M74 260v18m-9-9h18"
+                stroke="var(--primary)"
+                strokeWidth="2"
+                strokeLinecap="round"
               />
+              <circle cx="385" cy="240" r="5" fill="var(--primary)" />
+              <circle cx="60" cy="106" r="3" fill="var(--link-ink)" />
+            </svg>
+            <div className="art-original mono">
+              <span>https://a-very-long-link.com/and-then-some</span>
+            </div>
+            <div className="art-short mono">
+              <Link2 size={17} />
+              <span>short.lidco.de/hello</span>
+              <ArrowUpRight size={17} />
+            </div>
+            <span className="art-footnote mono">
+              The short way there <ArrowDownRight size={16} />
+            </span>
+          </div>
+        </section>
+
+        <section className="shortener-panel" id="shorten" aria-labelledby="shortener-title">
+          <div className="panel-heading">
+            <div className="section-title">
+              <span className="section-index mono" aria-hidden="true">
+                01
+              </span>
+              <h2 id="shortener-title">Let&apos;s make it short.</h2>
+            </div>
+            <span className="panel-note mono">Paste. Shorten. Share.</span>
+          </div>
+
+          <form onSubmit={handleSubmit} aria-busy={buttonState === "loading"}>
+            <label className="field-label mono" htmlFor="original-url">
+              Your long URL
+            </label>
+            <div className="shortener-fields">
+              <div className="url-field">
+                <Link2 size={21} className="url-field-icon" aria-hidden="true" />
+                <Input
+                  id="original-url"
+                  name="originalUrl"
+                  type="url"
+                  placeholder="https://your-long-link.com/something-great"
+                  required
+                  autoComplete="url"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  className="url-input"
+                  value={url}
+                  disabled={buttonState === "loading"}
+                  aria-describedby={
+                    submitError ? "shortener-error shortener-note" : "shortener-note"
+                  }
+                  aria-invalid={Boolean(submitError)}
+                  onChange={(event) => {
+                    setUrl(event.target.value);
+                    setSubmitError(null);
+                  }}
+                />
+              </div>
               <Button
                 type="submit"
                 disabled={buttonState === "loading"}
-                className={cn({
-                  "px-4 py-2 shrink-0": true,
-                  "bg-green-600 hover:bg-green-700 text-white":
-                    buttonState === "success",
-                  "bg-red-600 hover:bg-red-700 text-white":
-                    buttonState === "error",
-                })}
+                className="shorten-button"
+                data-state={buttonState}
               >
-                <AnimatedIcon buttonState={buttonState} />
+                <span>{buttonLabels[buttonState]}</span>
+                {buttonState === "idle" && <ArrowUpRight aria-hidden="true" />}
+                {buttonState === "loading" && (
+                  <LoaderCircle className="animate-spin" aria-hidden="true" />
+                )}
+                {buttonState === "success" && <Check aria-hidden="true" />}
+                {buttonState === "error" && <X aria-hidden="true" />}
               </Button>
             </div>
-          </form>
-        </Card>
-
-        <Card className="w-full p-8">
-          {shortenedUrls.length === 0 ? (
-            <p className="text-center text-gray-500">
-              No URLs shortened yet. Start by entering a URL above.
-            </p>
-          ) : (
-            <>
-              <p className="text-center text-gray-500">
-                URLs created without an account will expire after 30 days
+            {submitError && (
+              <p className="form-error" id="shortener-error" role="alert">
+                {submitError}
               </p>
-              <div className="space-y-4">
-                {shortenedUrls.map((item, index) => {
-                  const isNewlyAdded = newlyAddedIndex === index;
-                  return (
-                    <Fragment key={index}>
-                      <motion.div
-                        key={`${item.shortUrl}-${index}`}
-                        initial={
-                          isNewlyAdded
-                            ? { opacity: 0, y: -20, scale: 0.95 }
-                            : false
-                        }
-                        animate={
-                          isNewlyAdded ? { opacity: 1, y: 0, scale: 1 } : {}
-                        }
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className={cn({
-                          "ring-green-500 ring-opacity-50 rounded-lg p-2 bg-green-50 dark:bg-green-900/20":
-                            isNewlyAdded,
-                        })}
-                      >
-                        <div
-                          key={index}
-                          className="flex flex-col md:grid md:grid-cols-[1fr_15rem_6.75rem] items-center gap-2"
-                        >
-                          <p className="truncate text-base text-center w-full">
-                            {item.originalUrl}
-                          </p>
-                          <Button
-                            variant="link"
-                            asChild
-                            className="text-blue-400 cursor-pointer text-base w-fit text-center mx-auto"
-                          >
-                            <a
-                              href={item.shortUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {item.shortUrl}
-                            </a>
-                          </Button>
-                          <div className="flex gap-2 justify-between">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => copyToClipboard(item.shortUrl)}
-                            >
-                              Copy
-                            </Button>
-                            <ConfirmDeleteDialog
-                              description="This action cannot be undone. This will permanently delete the short link from our servers."
-                              onConfirm={() => {
-                                setShortenedUrls((prev) =>
-                                  prev.filter((_, i) => i !== index)
-                                );
-                              }}
-                            >
-                              <Button variant="ghost" size="sm">
-                                <Trash />
-                              </Button>
-                            </ConfirmDeleteDialog>
-                          </div>
-                        </div>
-                      </motion.div>
-                      <Separator className="my-2" orientation="horizontal" />
-                    </Fragment>
-                  );
-                })}
+            )}
+            <div className="shortener-notes" id="shortener-note">
+              <span>
+                <Clock3 size={14} aria-hidden="true" /> Links last for 30 days
+              </span>
+              <span>
+                <LockKeyhole size={14} aria-hidden="true" /> History saved in this browser
+              </span>
+            </div>
+          </form>
+        </section>
+
+        <section className="collection" id="your-links" aria-labelledby="collection-title">
+          <div className="collection-heading">
+            <div>
+              <div className="section-title">
+                <span className="section-index mono" aria-hidden="true">
+                  02
+                </span>
+                <h2 id="collection-title">Your links, all lined up.</h2>
+                <span
+                  className="collection-count mono"
+                  aria-label={`${shortenedUrls.length} saved links`}
+                >
+                  {shortenedUrls.length.toString().padStart(2, "0")}
+                </span>
               </div>
-            </>
+              <p className="collection-description">
+                A small collection. Ready for your next big thing.
+              </p>
+            </div>
+            <span className="collection-local mono">Only on this device</span>
+          </div>
+
+          {shortenedUrls.length === 0 ? (
+            <div className="empty-collection">
+              <div className="empty-icon" aria-hidden="true">
+                <Link2 size={28} strokeWidth={1.7} />
+              </div>
+              <div className="empty-copy">
+                <h3>A little empty. A lot of potential.</h3>
+                <p>Your first short link will feel right at home here.</p>
+              </div>
+              <a
+                className="empty-action"
+                href="#original-url"
+                aria-label="Create your first short link"
+              >
+                <ArrowUpRight size={22} aria-hidden="true" />
+              </a>
+            </div>
+          ) : (
+            <ul className="link-list" aria-label="Saved short links">
+              {shortenedUrls.map((item, index) => {
+                const isCopied = copiedUrl === item.shortUrl;
+                return (
+                  <li
+                    key={`${item.shortUrl}-${index}`}
+                    className={cn("link-row", { "is-new": newlyAddedUrl === item.shortUrl })}
+                  >
+                    <span className="link-number mono" aria-hidden="true">
+                      {(index + 1).toString().padStart(2, "0")}
+                    </span>
+                    <div className="link-details">
+                      <a
+                        className="short-link"
+                        href={item.shortUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span>{item.shortUrl.replace(/^https?:\/\//, "")}</span>
+                        <ArrowUpRight size={16} aria-hidden="true" />
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                      <p className="original-link" title={item.originalUrl}>
+                        {item.originalUrl}
+                      </p>
+                    </div>
+                    <div className="link-actions">
+                      <Button
+                        variant="outline"
+                        className="copy-button"
+                        data-copied={isCopied}
+                        onClick={() => copyToClipboard(item.shortUrl)}
+                        aria-label={`${isCopied ? "Copied" : "Copy"} ${item.shortUrl}`}
+                      >
+                        {isCopied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                        <span>{isCopied ? "Copied" : "Copy link"}</span>
+                      </Button>
+                      <ConfirmDeleteDialog
+                        description="This removes the link from this browser's history. The short URL will still work until it expires."
+                        onConfirm={() => {
+                          setShortenedUrls((previous) =>
+                            previous.filter((_, itemIndex) => itemIndex !== index),
+                          );
+                          toast.success("Link removed from your collection.");
+                        }}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="remove-button"
+                          aria-label={`Remove ${item.shortUrl} from history`}
+                          title="Remove from history"
+                        >
+                          <Trash2 aria-hidden="true" />
+                        </Button>
+                      </ConfirmDeleteDialog>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           )}
-        </Card>
-      </div>
+
+          <div className="collection-footer mono">
+            <span>
+              <span className="tiny-dot" aria-hidden="true" /> Small by design. Shareable by nature.
+            </span>
+            <ArrowRight size={16} aria-hidden="true" />
+          </div>
+        </section>
+      </main>
+
+      <footer className="site-footer page-width">
+        <p>
+          A shorter way to get there<span>.</span>
+        </p>
+        <a href="https://lidco.de" target="_blank" rel="noopener noreferrer">
+          Made by <strong>lidcode</strong> <ArrowUpRight size={14} aria-hidden="true" />
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      </footer>
     </div>
   );
 }
-
-const AnimatedIcon = ({ buttonState }: { buttonState: ButtonState }) => {
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={buttonState}
-        initial={{ opacity: 0, scale: 0.8, rotate: -180 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        exit={{ opacity: 0, scale: 0.8, rotate: 180 }}
-        transition={{ duration: 0.3 }}
-      >
-        {buttonState === "idle" && <SendIcon className="h-4 w-4" />}
-        {buttonState === "loading" && (
-          <LoaderCircleIcon className="h-4 w-4 animate-spin text-gray-100" />
-        )}
-        {buttonState === "success" && <Check className="h-4 w-4 text-white" />}
-        {buttonState === "error" && <X className="h-4 w-4 text-white" />}
-      </motion.div>
-    </AnimatePresence>
-  );
-};

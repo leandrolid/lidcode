@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react";
 
 type Props = {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ type Props = {
 
 export function ConfirmDeleteDialog({
   children,
-  title = "Are you absolutely sure?",
+  title = "Remove this link?",
   description,
   onCancel,
   onConfirm,
@@ -28,18 +29,20 @@ export function ConfirmDeleteDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="confirm-dialog">
         <AlertDialogHeader>
+          <span className="dialog-icon" aria-hidden="true">
+            <Trash2 size={21} strokeWidth={1.7} />
+          </span>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            className="bg-destructive text-white hover:bg-destructive/90"
-            onClick={onConfirm}
-          >
-            Continue
+          <AlertDialogCancel className="dialog-cancel" onClick={onCancel}>
+            Keep link
+          </AlertDialogCancel>
+          <AlertDialogAction className="dialog-remove" onClick={onConfirm}>
+            Remove link
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
