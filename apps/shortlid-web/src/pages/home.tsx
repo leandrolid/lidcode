@@ -188,7 +188,8 @@ export function Home() {
                   stroke="var(--primary)"
                   strokeWidth="32"
                 />
-                <path d="M178 90h39a56 56 0 0 1 53 38" stroke="var(--link-ink)" strokeWidth="32" />
+                {/* Redraw this arc so the background link passes over the upper crossing. */}
+                <path d="M217 90a56 56 0 0 1 0 112" stroke="var(--link-ink)" strokeWidth="32" />
               </g>
               <path
                 d="M356 58v26m-13-13h26M74 260v18m-9-9h18"
