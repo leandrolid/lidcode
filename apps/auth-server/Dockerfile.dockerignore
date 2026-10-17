@@ -1,0 +1,10 @@
+**/node_modules
+**/dist
+**/.turbo
+**/*.tsbuildinfo
+**/.env*
+.git
+.omo
+.codegraph
+.opencode
+.playwright-mcp

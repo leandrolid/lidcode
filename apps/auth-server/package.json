@@ -1,0 +1,47 @@
+{
+  "name": "auth-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-migrations.mjs",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit",
+    "test": "tsx --test src/**/*.spec.ts",
+    "schema:generate": "auth generate --config auth.schema.config.ts --output src/infra/adapters/drizzle/schemas/auth.ts --yes",
+    "generate:dev": "NODE_OPTIONS='--import tsx' drizzle-kit generate",
+    "migrate:dev": "drizzle-kit migrate",
+    "migrate:deploy": "node dist/commands/migrate.js",
+    "db:open": "NODE_OPTIONS='--import tsx' drizzle-kit studio",
+    "admin:bootstrap": "node dist/commands/bootstrap-admin.js"
+  },
+  "dependencies": {
+    "@better-auth/drizzle-adapter": "1.7.10",
+    "@better-auth/oauth-provider": "1.7.10",
+    "@hono/node-server": "2.1.5",
+    "better-auth": "1.7.10",
+    "drizzle-orm": "^0.45.2",
+    "hono": "4.13.13",
+    "jose": "6.2.12",
+    "pg": "^8.16.3",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@lidcode/eslint": "*",
+    "@lidcode/prettier": "*",
+    "@lidcode/tsconfig": "*",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.6",
+    "auth": "1.7.10",
+    "drizzle-kit": "^0.31.8",
+    "eslint": "^9.39.0",
+    "tsx": "4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "prettier": "@lidcode/prettier"
+}

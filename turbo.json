@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "envMode": "loose",
+  "globalPassThroughEnv": ["AUTH_*"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

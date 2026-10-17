@@ -12,6 +12,7 @@
     "generate:dev": "dotenv -e .env -- turbo run generate:dev",
     "db:open": "dotenv -e .env -- turbo run db:open",
     "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {

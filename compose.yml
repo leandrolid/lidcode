@@ -14,11 +14,42 @@ services:
       context: .
       dockerfile: apps/auth-server/Dockerfile
     ports:
-      - "3333:3333"
-    env_file:
-      - .env
+      - "${AUTH_PORT:-3334}:3334"
+    command:
+      - sh
+      - -c
+      - node apps/auth-server/dist/commands/migrate.js && exec node apps/auth-server/dist/index.js
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+      - PORT=3334
+      - AUTH_PUBLIC_ORIGIN=${AUTH_PUBLIC_ORIGIN:-http://localhost:3334}
+      - AUTH_DATABASE_URL=postgresql://auth:${AUTH_DATABASE_PASSWORD:-replace-with-local-database-password}@auth-postgres:5432/auth
+      - AUTH_DATABASE_SSL=false
+      - AUTH_SECRET
+      - AUTH_GOOGLE_CLIENT_ID
+      - AUTH_GOOGLE_CLIENT_SECRET
+      - AUTH_GITHUB_CLIENT_ID
+      - AUTH_GITHUB_CLIENT_SECRET
+      - AUTH_RESEND_API_KEY
+      - AUTH_EMAIL_FROM
+    depends_on:
+      auth-postgres:
+        condition: service_healthy
+  auth-postgres:
+    image: postgres:15-alpine
+    ports:
+      - "${AUTH_DATABASE_PORT:-5434}:5432"
+    environment:
+      - POSTGRES_USER=auth
+      - POSTGRES_DB=auth
+      - POSTGRES_PASSWORD=${AUTH_DATABASE_PASSWORD:-replace-with-local-database-password}
+    volumes:
+      - auth-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth -d auth"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
   shortlid-server:
     build:
       context: .
@@ -68,3 +99,6 @@ services:
 networks:
   default:
     driver: bridge
+
+volumes:
+  auth-postgres-data:

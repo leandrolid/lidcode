@@ -1,0 +1,38 @@
+{
+  "name": "auth-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3001",
+    "build": "vite build && tsc --noEmit",
+    "preview": "vite preview --host 0.0.0.0 --port 3001",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@better-auth/oauth-provider": "1.7.10",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@fontsource/instrument-serif": "^5.2.6",
+    "@fontsource/outfit": "^5.2.8",
+    "@lidcode/elements": "*",
+    "@tanstack/react-router": "^1.170.44",
+    "better-auth": "1.7.10",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@lidcode/eslint": "*",
+    "@lidcode/prettier": "*",
+    "@lidcode/tsconfig": "*",
+    "@tanstack/router-plugin": "^1.168.46",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "eslint": "^9.39.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.7"
+  },
+  "prettier": "@lidcode/prettier"
+}
