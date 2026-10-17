@@ -10,6 +10,16 @@ const config: Config = {
     '^@domain/(.*)$': '<rootDir>/src/domain/$1',
     '^@infra/(.*)$': '<rootDir>/src/infra/$1',
   },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          module: 'commonjs',
+        },
+      },
+    ],
+  },
 }
 
 export default config
