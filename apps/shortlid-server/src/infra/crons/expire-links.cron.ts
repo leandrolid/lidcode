@@ -2,6 +2,8 @@ import type { IUrlRepository } from '@infra/repositories/url/url.repository'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
 
+const THIRTY_DAYS = 2_592_000_000
+
 @Injectable()
 export class ExpireLinksCron {
   private readonly logger = new Logger(ExpireLinksCron.name)
@@ -17,8 +19,7 @@ export class ExpireLinksCron {
   }
 
   private calculateThirtyDaysAgo(): Date {
-    const now = new Date()
-    now.setDate(now.getDate() - 30)
-    return now
+    const thirtyDaysAgo = Date.now() - THIRTY_DAYS
+    return new Date(thirtyDaysAgo)
   }
 }
